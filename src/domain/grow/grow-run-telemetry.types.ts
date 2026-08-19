@@ -21,6 +21,16 @@ export interface GrowRunTelemetrySummary {
   lastSampleAt: number | null;
 }
 
+export interface GrowRunTelemetryCycleStats {
+  growRunId: string;
+  sampleCount: number;
+  tempAvgC: number | null;
+  tempMinC: number | null;
+  tempMaxC: number | null;
+  humidityAvgPct: number | null;
+  vpdAvgKpa: number | null;
+}
+
 export interface StartGrowRunInput {
   cropId: string;
   commonName: string;

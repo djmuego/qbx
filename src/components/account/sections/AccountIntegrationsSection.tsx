@@ -9,6 +9,7 @@ import {
   loadIntegrationsConfig,
   saveIntegrationsConfig,
 } from '../../../application/integrations/hub-integration.store';
+import { saveIntegrationsAdvisory } from '../../../application/integrations/integrations-advisory.store';
 import {
   fetchHomeAssistantEntities,
   fetchMqttBridgeMessages,
@@ -21,6 +22,7 @@ import {
 import type { MqttBridgeMessageResult } from '../../../application/integrations/integrations-connection.api';
 import type { WorkspaceIntegrationsConfig } from '../../../domain/integrations/hub-integration.types';
 import type { MqttTopicMapping } from '../../../domain/integrations/mqtt-topic-mapping.types';
+import type { HomeAssistantEntityBinding } from '../../../domain/integrations/home-assistant-binding.types';
 
 export const AccountIntegrationsSection: React.FC = () => {
   const { t } = useLocale();
@@ -43,13 +45,38 @@ export const AccountIntegrationsSection: React.FC = () => {
   }, [activeWorkspaceId]);
 
   useEffect(() => {
-    if (!mqttMonitorActive) return;
+    if (!mqttMonitorActive || !activeWorkspaceId || !config) return;
+    const persistAdvisory = (
+      status: Awaited<ReturnType<typeof fetchMqttBridgeStatus>>,
+      messages: MqttBridgeMessageResult[],
+    ) => {
+      saveIntegrationsAdvisory({
+        workspaceId: activeWorkspaceId,
+        updatedAtMs: Date.now(),
+        mqttMonitorActive: status.active && status.connected,
+        mqttMappingCount: config.mqtt.topicMappings.length,
+        haBindingCount: config.homeAssistant.entityBindings.length,
+        haEntityCount: config.homeAssistant.lastDiscovery?.entityCount ?? null,
+        readings: messages
+          .filter((m) => m.mapped)
+          .map((m) => ({
+            source: 'mqtt' as const,
+            topic: m.topic,
+            deviceId: m.mapped!.deviceId,
+            inputId: m.mapped!.inputId,
+            value: m.mapped!.value,
+            unit: m.mapped!.unit,
+            receivedAtMs: m.receivedAtMs,
+          })),
+      });
+    };
     const poll = async () => {
       try {
         const status = await fetchMqttBridgeStatus();
         setMqttMonitorActive(status.active && status.connected);
         const { messages } = await fetchMqttBridgeMessages(12);
         setMqttMessages(messages);
+        persistAdvisory(status, messages);
       } catch {
         setMqttMonitorActive(false);
       }
@@ -57,7 +84,7 @@ export const AccountIntegrationsSection: React.FC = () => {
     void poll();
     const timer = window.setInterval(() => void poll(), 5000);
     return () => window.clearInterval(timer);
-  }, [mqttMonitorActive]);
+  }, [mqttMonitorActive, activeWorkspaceId, config]);
 
   const persist = (next: WorkspaceIntegrationsConfig) => {
     if (!activeWorkspaceId) return;
@@ -168,6 +195,40 @@ export const AccountIntegrationsSection: React.FC = () => {
     });
   };
 
+  const updateHaBinding = (id: string, patch: Partial<HomeAssistantEntityBinding>) => {
+    const entityBindings = config.homeAssistant.entityBindings.map((b) =>
+      b.id === id ? { ...b, ...patch } : b,
+    );
+    persist({ ...config, homeAssistant: { ...config.homeAssistant, entityBindings } });
+  };
+
+  const addHaBinding = () => {
+    const sample = config.homeAssistant.lastDiscovery?.sampleEntities[0] ?? 'sensor.example';
+    const row: HomeAssistantEntityBinding = {
+      id: `habind-${Date.now()}`,
+      entityId: sample,
+      deviceId: '',
+      inputId: '',
+    };
+    persist({
+      ...config,
+      homeAssistant: {
+        ...config.homeAssistant,
+        entityBindings: [...config.homeAssistant.entityBindings, row],
+      },
+    });
+  };
+
+  const removeHaBinding = (id: string) => {
+    persist({
+      ...config,
+      homeAssistant: {
+        ...config.homeAssistant,
+        entityBindings: config.homeAssistant.entityBindings.filter((b) => b.id !== id),
+      },
+    });
+  };
+
   const runHaTest = async () => {
     if (!config.homeAssistant.baseUrl.trim()) {
       setHaTestResult(t('integrations.haNoUrl', 'Укажите URL Home Assistant'));
@@ -230,6 +291,17 @@ export const AccountIntegrationsSection: React.FC = () => {
           ...config,
           homeAssistant: { ...config.homeAssistant, lastDiscovery: snapshot },
         });
+        if (activeWorkspaceId) {
+          saveIntegrationsAdvisory({
+            workspaceId: activeWorkspaceId,
+            updatedAtMs: Date.now(),
+            mqttMonitorActive: false,
+            mqttMappingCount: config.mqtt.topicMappings.length,
+            haBindingCount: config.homeAssistant.entityBindings.length,
+            haEntityCount: snapshot.entityCount,
+            readings: [],
+          });
+        }
         setHaTestResult(
           `${t('integrations.haEntitiesOk', 'Сущностей')}: ${result.entityCount ?? 0}` +
             (topDomains ? ` · ${topDomains}` : '') +
@@ -520,6 +592,64 @@ export const AccountIntegrationsSection: React.FC = () => {
                 {new Date(config.homeAssistant.lastDiscovery.discoveredAt).toLocaleString()}
               </p>
             )}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">
+                  {t('integrations.haBindings', 'Entity → device binding')}
+                </p>
+                <button
+                  type="button"
+                  disabled={!allowed}
+                  onClick={() => proGate(addHaBinding)}
+                  className="text-[10px] font-semibold text-violet-700 dark:text-violet-300"
+                >
+                  + {t('integrations.haAddBinding', 'Добавить')}
+                </button>
+              </div>
+              {config.homeAssistant.entityBindings.length === 0 ? (
+                <p className="text-[10px] text-slate-400">{t('integrations.haBindingsEmpty', 'Нет привязок')}</p>
+              ) : (
+                config.homeAssistant.entityBindings.map((binding) => (
+                  <div key={binding.id} className="grid grid-cols-2 gap-1.5 p-2 rounded-lg bg-slate-50 dark:bg-zinc-800/60">
+                    <input
+                      disabled={!allowed}
+                      list="ha-entity-samples"
+                      value={binding.entityId}
+                      onChange={(e) => updateHaBinding(binding.id, { entityId: e.target.value })}
+                      placeholder="sensor.temp"
+                      className="col-span-2 px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <input
+                      disabled={!allowed}
+                      value={binding.deviceId}
+                      onChange={(e) => updateHaBinding(binding.id, { deviceId: e.target.value })}
+                      placeholder="deviceId"
+                      className="px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <input
+                      disabled={!allowed}
+                      value={binding.inputId}
+                      onChange={(e) => updateHaBinding(binding.id, { inputId: e.target.value })}
+                      placeholder="inputId"
+                      className="px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <button
+                      type="button"
+                      disabled={!allowed}
+                      onClick={() => proGate(() => removeHaBinding(binding.id))}
+                      className="col-span-2 text-[10px] text-rose-600 text-left"
+                    >
+                      {t('common.delete', 'Удалить')}
+                    </button>
+                  </div>
+                ))
+              )}
+              <datalist id="ha-entity-samples">
+                {(config.homeAssistant.lastDiscovery?.sampleEntities ?? []).map((entity) => (
+                  <option key={entity} value={entity} />
+                ))}
+              </datalist>
+            </div>
           </section>
 
           <section className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 space-y-2">

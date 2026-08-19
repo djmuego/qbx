@@ -1,4 +1,8 @@
-import type { GrowRunTelemetrySample, GrowRunTelemetrySummary } from '../../domain/grow/grow-run-telemetry.types';
+import type {
+  GrowRunTelemetryCycleStats,
+  GrowRunTelemetrySample,
+  GrowRunTelemetrySummary,
+} from '../../domain/grow/grow-run-telemetry.types';
 import { getRuntimeMode } from '../../config/runtime-mode';
 
 const STORAGE_KEY = 'qbx_grow_run_telemetry_v1';
@@ -50,6 +54,27 @@ export function summarizeGrowRunTelemetry(spaceId: string, growRunId: string): G
     sampleCount: samples.length,
     firstSampleAt: samples[0]?.timestampMs ?? null,
     lastSampleAt: samples[samples.length - 1]?.timestampMs ?? null,
+  };
+}
+
+function avg(nums: number[]): number | null {
+  if (nums.length === 0) return null;
+  return nums.reduce((a, b) => a + b, 0) / nums.length;
+}
+
+export function computeGrowRunCycleStats(spaceId: string, growRunId: string): GrowRunTelemetryCycleStats {
+  const samples = loadGrowRunTelemetry(spaceId, growRunId);
+  const temps = samples.map((s) => s.tempC).filter((v): v is number => v != null);
+  const humidity = samples.map((s) => s.humidityPct).filter((v): v is number => v != null);
+  const vpd = samples.map((s) => s.vpdKpa).filter((v): v is number => v != null);
+  return {
+    growRunId,
+    sampleCount: samples.length,
+    tempAvgC: avg(temps),
+    tempMinC: temps.length ? Math.min(...temps) : null,
+    tempMaxC: temps.length ? Math.max(...temps) : null,
+    humidityAvgPct: avg(humidity),
+    vpdAvgKpa: avg(vpd),
   };
 }
 

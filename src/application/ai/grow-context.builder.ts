@@ -18,7 +18,7 @@ import { calculateDewPoint, calculateDliPlaceholder, calculateVpd } from './deri
 import { summarizeSensorHistory } from './telemetry-summary';
 import { toGeometrySnapshot } from '../../domain/map/space-map.geometry';
 import { spatialScaleForType } from '../../domain/map/spatial-hierarchy';
-import { summarizeGrowRunTelemetry } from '../grow/grow-run-telemetry.store';
+import { computeGrowRunCycleStats } from '../grow/grow-run-telemetry.store';
 
 export interface BuildGrowContextInput {
   space: Space | undefined;
@@ -245,16 +245,29 @@ export function buildGrowContext(input: BuildGrowContextInput): GrowContext {
       dataKind: 'FACT',
     },
     growRun: input.growRun
-      ? {
-          id: input.growRun.id,
-          commonName: input.growRun.commonName,
-          startedAt: input.growRun.startedAt,
-          stage: GROW_STAGE_LABELS[input.growRun.stage] ?? input.growRun.stage,
-          telemetrySampleCount: input.space?.id
-            ? summarizeGrowRunTelemetry(input.space.id, input.growRun.id).sampleCount
-            : 0,
-          dataKind: 'FACT',
-        }
+      ? (() => {
+          const stats =
+            input.space?.id && input.growRun.id
+              ? computeGrowRunCycleStats(input.space.id, input.growRun.id)
+              : null;
+          return {
+            id: input.growRun.id,
+            commonName: input.growRun.commonName,
+            startedAt: input.growRun.startedAt,
+            stage: GROW_STAGE_LABELS[input.growRun.stage] ?? input.growRun.stage,
+            telemetrySampleCount: stats?.sampleCount ?? 0,
+            cycleStats: stats
+              ? {
+                  tempAvgC: stats.tempAvgC,
+                  tempMinC: stats.tempMinC,
+                  tempMaxC: stats.tempMaxC,
+                  humidityAvgPct: stats.humidityAvgPct,
+                  vpdAvgKpa: stats.vpdAvgKpa,
+                }
+              : undefined,
+            dataKind: 'FACT' as const,
+          };
+        })()
       : { dataKind: 'UNKNOWN' },
     environment: {
       sensors: sensors.filter((s) => ['temperature', 'humidity', 'co2', 'light', 'pressure'].includes(s.type)),

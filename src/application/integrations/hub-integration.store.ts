@@ -26,7 +26,11 @@ export function loadIntegrationsConfig(workspaceId: string): WorkspaceIntegratio
         ...parsed.mqtt,
         topicMappings: parsed.mqtt?.topicMappings ?? defaults.mqtt.topicMappings,
       },
-      homeAssistant: { ...defaults.homeAssistant, ...parsed.homeAssistant },
+      homeAssistant: {
+        ...defaults.homeAssistant,
+        ...parsed.homeAssistant,
+        entityBindings: parsed.homeAssistant?.entityBindings ?? defaults.homeAssistant.entityBindings,
+      },
     };
   } catch {
     return defaultIntegrationsConfig();

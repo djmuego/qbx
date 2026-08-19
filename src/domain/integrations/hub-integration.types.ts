@@ -1,3 +1,4 @@
+import type { HomeAssistantEntityBinding } from './home-assistant-binding.types';
 import type { MqttTopicMapping } from './mqtt-topic-mapping.types';
 
 export type HubIntegrationKind = 'mqtt' | 'home_assistant' | 'tuya' | 'qbx_zigbee';
@@ -24,6 +25,7 @@ export interface HomeAssistantIntegrationConfig {
   /** Long-lived access token — stored locally / workspace payload only */
   accessToken?: string;
   lastDiscovery?: HomeAssistantDiscoverySnapshot;
+  entityBindings: HomeAssistantEntityBinding[];
 }
 
 export interface TuyaIntegrationConfig {
@@ -48,7 +50,7 @@ export function defaultIntegrationsConfig(): WorkspaceIntegrationsConfig {
   return {
     schemaVersion: 1,
     mqtt: { enabled: false, brokerUrl: '', port: 1883, topicPrefix: 'qbx/', useTls: false, topicMappings: [] },
-    homeAssistant: { enabled: false, baseUrl: '', accessToken: '' },
+    homeAssistant: { enabled: false, baseUrl: '', accessToken: '', entityBindings: [] },
     tuya: { enabled: false, region: 'eu' },
     qbxZigbee: { enabled: false, note: '' },
   };

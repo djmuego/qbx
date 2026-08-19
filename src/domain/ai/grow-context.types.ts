@@ -165,6 +165,13 @@ export interface GrowContext {
     startedAt?: string;
     stage?: string;
     telemetrySampleCount?: number;
+    cycleStats?: {
+      tempAvgC: number | null;
+      tempMinC: number | null;
+      tempMaxC: number | null;
+      humidityAvgPct: number | null;
+      vpdAvgKpa: number | null;
+    };
     dataKind: DataKind;
   };
   environment: {
