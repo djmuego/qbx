@@ -3,11 +3,16 @@ import { Bot, Box, Layers, Sparkles, Zap } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { useLocale } from '../../i18n/LocaleContext';
 import type { FeatureKey, WorkspaceSubscription } from '../../domain/commercial/subscription.types';
-import { QBX_PRO_MONTHLY_USD, QBX_PRO_YEARLY_USD } from '../../config/commerce.config';
+import {
+  QBX_PRO_MONTHLY_USD,
+  QBX_PRO_YEARLY_USD,
+  STRIPE_PRO_MONTHLY_PRICE_ID,
+  STRIPE_PRO_YEARLY_PRICE_ID,
+  isStripeConfigured,
+} from '../../config/commerce.config';
 import { useAuth } from '../../context/AuthContext';
 import { getSupabaseClient } from '../../infrastructure/supabase/client';
 import { createCheckoutSession } from '../../data/adapters/supabase/billing-api';
-import { STRIPE_PRO_MONTHLY_PRICE_ID, STRIPE_PRO_YEARLY_PRICE_ID } from '../../config/commerce.config';
 
 interface UpgradeModalProps {
   open: boolean;
@@ -62,6 +67,10 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, feature, subsc
   const trialExpired = trialEnds && trialEnds.getTime() < Date.now();
 
   const startCheckout = async (priceId: string) => {
+    if (!isStripeConfigured()) {
+      setError(t('billing.stripeNotConfigured', 'Stripe ещё не настроен. Добавьте Edge Functions и price ID.'));
+      return;
+    }
     if (!supabase || !activeWorkspaceId || !priceId) {
       setError(t('billing.stripeNotConfigured', 'Stripe ещё не настроен. Добавьте Edge Functions и price ID.'));
       return;

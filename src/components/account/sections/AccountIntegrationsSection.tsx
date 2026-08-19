@@ -9,7 +9,10 @@ import {
   loadIntegrationsConfig,
   saveIntegrationsConfig,
 } from '../../../application/integrations/hub-integration.store';
-import { testMqttBrokerConnection } from '../../../application/integrations/mqtt-connection.api';
+import {
+  testHomeAssistantConnection,
+  testMqttBrokerConnection,
+} from '../../../application/integrations/integrations-connection.api';
 import type { WorkspaceIntegrationsConfig } from '../../../domain/integrations/hub-integration.types';
 
 export const AccountIntegrationsSection: React.FC = () => {
@@ -20,6 +23,8 @@ export const AccountIntegrationsSection: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [mqttTestBusy, setMqttTestBusy] = useState(false);
   const [mqttTestResult, setMqttTestResult] = useState<string | null>(null);
+  const [haTestBusy, setHaTestBusy] = useState(false);
+  const [haTestResult, setHaTestResult] = useState<string | null>(null);
 
   useEffect(() => {
     if (!activeWorkspaceId) return;
@@ -70,6 +75,36 @@ export const AccountIntegrationsSection: React.FC = () => {
       setMqttTestResult(e instanceof Error ? e.message : t('integrations.mqttFail', 'Не удалось подключиться'));
     } finally {
       setMqttTestBusy(false);
+    }
+  };
+
+  const runHaTest = async () => {
+    if (!config.homeAssistant.baseUrl.trim()) {
+      setHaTestResult(t('integrations.haNoUrl', 'Укажите URL Home Assistant'));
+      return;
+    }
+    if (!config.homeAssistant.accessToken?.trim()) {
+      setHaTestResult(t('integrations.haNoToken', 'Укажите long-lived access token'));
+      return;
+    }
+    setHaTestBusy(true);
+    setHaTestResult(null);
+    try {
+      const result = await testHomeAssistantConnection({
+        baseUrl: config.homeAssistant.baseUrl,
+        accessToken: config.homeAssistant.accessToken,
+      });
+      if (result.ok) {
+        setHaTestResult(
+          `${t('integrations.haOk', 'Home Assistant API OK')}: ${result.version ?? 'OK'} (${result.latencyMs}ms)`,
+        );
+      } else {
+        setHaTestResult(result.error ?? t('integrations.haFail', 'Не удалось подключиться'));
+      }
+    } catch (e) {
+      setHaTestResult(e instanceof Error ? e.message : t('integrations.haFail', 'Не удалось подключиться'));
+    } finally {
+      setHaTestBusy(false);
     }
   };
 
@@ -137,16 +172,38 @@ export const AccountIntegrationsSection: React.FC = () => {
               placeholder="mqtt://broker.local"
               className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
             />
-            <input
-              disabled={!allowed}
-              type="number"
-              value={config.mqtt.port}
-              onChange={(e) =>
-                setConfig({ ...config, mqtt: { ...config.mqtt, port: Number(e.target.value) || 1883 } })
-              }
-              onBlur={() => proGate(() => persist(config))}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
-            />
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                disabled={!allowed}
+                type="number"
+                value={config.mqtt.port}
+                onChange={(e) =>
+                  setConfig({ ...config, mqtt: { ...config.mqtt, port: Number(e.target.value) || 1883 } })
+                }
+                onBlur={() => proGate(() => persist(config))}
+                placeholder="1883"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
+              />
+              <input
+                disabled={!allowed}
+                value={config.mqtt.topicPrefix}
+                onChange={(e) => setConfig({ ...config, mqtt: { ...config.mqtt, topicPrefix: e.target.value } })}
+                onBlur={() => proGate(() => persist(config))}
+                placeholder="qbx/"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
+              />
+            </div>
+            <label className="flex items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={config.mqtt.useTls}
+                disabled={!allowed}
+                onChange={(e) =>
+                  proGate(() => persist({ ...config, mqtt: { ...config.mqtt, useTls: e.target.checked } }))
+                }
+              />
+              TLS
+            </label>
             <button
               type="button"
               disabled={!allowed || mqttTestBusy}
@@ -166,6 +223,19 @@ export const AccountIntegrationsSection: React.FC = () => {
               <Home className="w-4 h-4 text-slate-500" />
               <p className="text-sm font-semibold">Home Assistant</p>
             </div>
+            <label className="flex items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={config.homeAssistant.enabled}
+                disabled={!allowed}
+                onChange={(e) =>
+                  proGate(() =>
+                    persist({ ...config, homeAssistant: { ...config.homeAssistant, enabled: e.target.checked } }),
+                  )
+                }
+              />
+              {t('integrations.enabled', 'Включить (черновик)')}
+            </label>
             <input
               disabled={!allowed}
               value={config.homeAssistant.baseUrl}
@@ -176,6 +246,27 @@ export const AccountIntegrationsSection: React.FC = () => {
               placeholder="http://homeassistant.local:8123"
               className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
             />
+            <input
+              disabled={!allowed}
+              type="password"
+              value={config.homeAssistant.accessToken ?? ''}
+              onChange={(e) =>
+                setConfig({ ...config, homeAssistant: { ...config.homeAssistant, accessToken: e.target.value } })
+              }
+              onBlur={() => proGate(() => persist(config))}
+              placeholder={t('integrations.haToken', 'Long-lived access token')}
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
+            />
+            <button
+              type="button"
+              disabled={!allowed || haTestBusy}
+              onClick={() => proGate(() => void runHaTest())}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+            >
+              <PlugZap className="w-3.5 h-3.5" />
+              {haTestBusy ? t('integrations.testing', 'Проверка…') : t('integrations.haTest', 'Проверить API')}
+            </button>
+            {haTestResult && <p className="text-[11px] text-slate-500">{haTestResult}</p>}
           </section>
 
           <section className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 space-y-2">
@@ -197,6 +288,7 @@ export const AccountIntegrationsSection: React.FC = () => {
               <option value="us">US</option>
               <option value="cn">CN</option>
             </select>
+            <p className="text-[11px] text-slate-400">{t('integrations.tuyaSoon', 'Cloud connector — следующий релиз')}</p>
           </section>
         </div>
 

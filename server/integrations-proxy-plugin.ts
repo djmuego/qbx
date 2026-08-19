@@ -1,5 +1,11 @@
 import type { Plugin } from 'vite';
-import net from 'node:net';
+import {
+  parseBrokerHost,
+  readBody,
+  sendJson,
+  testHomeAssistantApi,
+  testTcpReachable,
+} from './integration-proxy-utils';
 
 interface MqttTestBody {
   brokerUrl?: string;
@@ -7,55 +13,10 @@ interface MqttTestBody {
   timeoutMs?: number;
 }
 
-function readBody(req: import('http').IncomingMessage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
-    req.on('end', () => resolve(body));
-    req.on('error', reject);
-  });
-}
-
-function sendJson(res: import('http').ServerResponse, status: number, payload: unknown) {
-  res.statusCode = status;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(payload));
-}
-
-function parseBrokerHost(raw: string): string {
-  const trimmed = raw.trim();
-  if (!trimmed) return '';
-  try {
-    if (trimmed.includes('://')) {
-      return new URL(trimmed).hostname;
-    }
-  } catch {
-    // fall through
-  }
-  return trimmed.split(':')[0] ?? '';
-}
-
-function testTcpReachable(host: string, port: number, timeoutMs: number): Promise<number> {
-  const started = Date.now();
-  return new Promise((resolve, reject) => {
-    const socket = net.connect({ host, port });
-    const timer = setTimeout(() => {
-      socket.destroy();
-      reject(new Error(`Connection timeout after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    socket.once('connect', () => {
-      clearTimeout(timer);
-      socket.end();
-      resolve(Date.now() - started);
-    });
-    socket.once('error', (err) => {
-      clearTimeout(timer);
-      reject(err);
-    });
-  });
+interface HaTestBody {
+  baseUrl?: string;
+  accessToken?: string;
+  timeoutMs?: number;
 }
 
 export function integrationsProxyPlugin(): Plugin {
@@ -85,7 +46,7 @@ export function integrationsProxyPlugin(): Plugin {
             host,
             port,
             latencyMs,
-            note: 'TCP reachability only — MQTT auth/subscribe not implemented yet',
+            note: 'TCP reachability only — MQTT subscribe ships in next connector pass',
           });
         } catch (e) {
           sendJson(res, 200, {
@@ -93,6 +54,40 @@ export function integrationsProxyPlugin(): Plugin {
             error: e instanceof Error ? e.message : 'Connection failed',
           });
         }
+      });
+
+      server.middlewares.use('/api/integrations/home-assistant/test', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        try {
+          const raw = await readBody(req);
+          const body = JSON.parse(raw || '{}') as HaTestBody;
+          const timeoutMs = Math.min(Math.max(Number(body.timeoutMs) || 6000, 2000), 15000);
+          const result = await testHomeAssistantApi(
+            body.baseUrl ?? '',
+            body.accessToken ?? '',
+            timeoutMs,
+          );
+          sendJson(res, 200, result);
+        } catch (e) {
+          sendJson(res, 200, {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Request failed',
+          });
+        }
+      });
+
+      server.middlewares.use('/api/integrations/tuya/status', async (req, res) => {
+        if (req.method !== 'GET') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        sendJson(res, 200, {
+          ok: false,
+          error: 'Tuya cloud connector not implemented — config draft only',
+        });
       });
     },
   };

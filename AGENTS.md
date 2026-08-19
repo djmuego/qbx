@@ -61,7 +61,7 @@ npm run lint:knowledge
 
 - **Frozen:** Runtime Core, AutomationEngine internals (fix proven bugs only). **Hardware / Zigbee hub** — deferred until branded hub arrives.
 - **Done:** Twin Controls ON/OFF/AUTO. Auth + Supabase workspaces. Platform Admin V4 + consciousness. **Platform Admin V5** (farm rename, member roles, audit filters, KB admin, AI farms tab). Commercial V1. Spatial Intelligence + heatmap. Account UX. **Knowledge Base RAG** (migrations 011–012, admin KB editor, `kb:sync`, hybrid retrieval, Twin AI Advisor widget with inline answers).
-- **Next:** Apply Supabase migrations `006`–`012` in prod. Live Stripe keys. External hub connectors (HA/MQTT/Tuya live transport). GrowRun telemetry loop after sensors.
+- **Next:** Apply Supabase migrations `006`–`012` in prod (`npm run db:push`). Live Stripe keys (`scripts/STRIPE_SETUP.md`). External hub connectors (HA/MQTT live transport). GrowRun telemetry loop (foundation shipped).
 
 ## Product phases
 

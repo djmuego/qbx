@@ -40,5 +40,9 @@ export const STRIPE_PRO_MONTHLY_PRICE_ID =
 export const STRIPE_PRO_YEARLY_PRICE_ID =
   (import.meta.env.VITE_STRIPE_PRO_YEARLY_PRICE_ID as string | undefined) ?? '';
 
+export function isStripeConfigured(): boolean {
+  return Boolean(STRIPE_PRO_MONTHLY_PRICE_ID && STRIPE_PRO_YEARLY_PRICE_ID);
+}
+
 export const QBX_PRO_MONTHLY_USD = 9.99;
 export const QBX_PRO_YEARLY_USD = 99;

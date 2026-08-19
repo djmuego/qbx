@@ -69,6 +69,12 @@ import {
   journalFromAgentRecommendation,
   mergeGrowJournalFromCloud,
 } from '../application/ai/grow-journal.store';
+import { getActiveGrowRun } from '../application/grow/grow-run.store';
+import {
+  buildRuntimeTelemetrySlice,
+  hasTelemetryData,
+} from '../application/grow/grow-run-telemetry.service';
+import { captureRuntimeTelemetrySlice } from '../application/grow/grow-run-telemetry.store';
 import { hydrateIntegrationsFromCloud } from '../application/integrations/hub-integration.store';
 import {
   fetchPlatformConsciousnessCloud,
@@ -378,6 +384,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsEmergencyActive(runtimeService.isEmergencyActive(snapshot.settings.currentSpaceId));
     setRuntimeSnapshot(runtimeService.getView().snapshot);
     setRuntimeEvents(runtimeService.getEventsForSpace(snapshot.settings.currentSpaceId));
+
+    const activeRun = getActiveGrowRun(snapshot.settings.currentSpaceId);
+    if (activeRun) {
+      const slice = buildRuntimeTelemetrySlice(view.devices, snapshot.settings.currentSpaceId);
+      if (hasTelemetryData(slice)) {
+        captureRuntimeTelemetrySlice(snapshot.settings.currentSpaceId, activeRun.id, slice);
+      }
+    }
   };
 
   useEffect(() => {

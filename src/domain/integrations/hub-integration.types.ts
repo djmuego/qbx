@@ -11,6 +11,8 @@ export interface MqttIntegrationConfig {
 export interface HomeAssistantIntegrationConfig {
   enabled: boolean;
   baseUrl: string;
+  /** Long-lived access token — stored locally / workspace payload only */
+  accessToken?: string;
 }
 
 export interface TuyaIntegrationConfig {
@@ -35,7 +37,7 @@ export function defaultIntegrationsConfig(): WorkspaceIntegrationsConfig {
   return {
     schemaVersion: 1,
     mqtt: { enabled: false, brokerUrl: '', port: 1883, topicPrefix: 'qbx/', useTls: false },
-    homeAssistant: { enabled: false, baseUrl: '' },
+    homeAssistant: { enabled: false, baseUrl: '', accessToken: '' },
     tuya: { enabled: false, region: 'eu' },
     qbxZigbee: { enabled: false, note: '' },
   };

@@ -14,7 +14,9 @@
     "sync:state": "tsx scripts/sync-qbx-state.ts",
     "sync:agent-knowledge": "tsx scripts/sync-agent-knowledge.ts",
     "kb:sync": "tsx scripts/sync-knowledge.ts",
-    "lint:knowledge": "tsx scripts/lint-agent-knowledge.ts"
+    "lint:knowledge": "tsx scripts/lint-agent-knowledge.ts",
+    "db:push": "bash scripts/db-push.sh",
+    "db:verify": "tsx scripts/verify-migrations.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.6",

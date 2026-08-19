@@ -25,9 +25,13 @@ Run in order:
 Or with Supabase CLI:
 
 ```bash
+npm run db:push
+# or manually:
 supabase link --project-ref YOUR_REF
 supabase db push
 ```
+
+List migrations: `npm run db:verify`
 
 ## 3. Auth settings
 
@@ -80,6 +84,8 @@ npm run dev
 - Data persists after reload (Postgres, not localStorage)
 
 ## 6. Stripe billing (optional)
+
+See **`scripts/STRIPE_SETUP.md`** for full production checklist.
 
 1. Create products/prices in Stripe Dashboard ($9.99/mo, $99/yr).
 2. Deploy edge functions:

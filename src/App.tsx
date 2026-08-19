@@ -15,6 +15,7 @@ import { HomeStatusBanner } from './components/home/HomeStatusBanner';
 import { GrowPhaseTile } from './components/home/GrowPhaseTile';
 import { GrowAgentTile } from './components/home/GrowAgentTile';
 import { GrowJournalTile } from './components/home/GrowJournalTile';
+import { GrowRunTile } from './components/home/GrowRunTile';
 import { SensorsGrid } from './components/home/SensorsGrid';
 import { EquipmentGrid } from './components/home/EquipmentGrid';
 import { TwinControlsOnboarding } from './components/equipment/TwinControlsOnboarding';
@@ -61,6 +62,8 @@ const MainContent: React.FC = () => {
             <GrowAgentTile />
 
             <GrowJournalTile />
+
+            <GrowRunTile />
 
             <TwinControlsOnboarding />
 
