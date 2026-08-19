@@ -6,5 +6,6 @@ describe('external-hub.registry', () => {
     expect(EXTERNAL_HUB_CONNECTORS.length).toBeGreaterThanOrEqual(4);
     expect(connectorByKind('mqtt')?.status).toBe('live');
     expect(connectorByKind('home-assistant')?.status).toBe('discovery');
+    expect(connectorByKind('tuya')?.status).toBe('health-check');
   });
 });

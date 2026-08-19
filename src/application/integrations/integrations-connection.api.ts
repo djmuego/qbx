@@ -136,3 +136,22 @@ export async function fetchHomeAssistantBoundStates(input: {
   });
   return (await response.json()) as HomeAssistantBoundStatesResult;
 }
+
+export interface TuyaCloudTestResult {
+  ok: boolean;
+  latencyMs?: number;
+  error?: string;
+}
+
+export async function testTuyaCloudConnection(input: {
+  region: string;
+  accessId: string;
+  accessSecret: string;
+}): Promise<TuyaCloudTestResult> {
+  const response = await fetch('/api/integrations/tuya/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  return (await response.json()) as TuyaCloudTestResult;
+}

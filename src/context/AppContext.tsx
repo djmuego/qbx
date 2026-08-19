@@ -76,6 +76,7 @@ import {
 } from '../application/grow/grow-run-telemetry.service';
 import { captureRuntimeTelemetrySlice } from '../application/grow/grow-run-telemetry.store';
 import { hydrateIntegrationsFromCloud } from '../application/integrations/hub-integration.store';
+import { hydrateGrowRunsFromCloud } from '../application/grow/hydrate-grow-run-cloud';
 import { useExternalIntegrationsBridge } from '../application/integrations/use-external-integrations-bridge';
 import {
   fetchPlatformConsciousnessCloud,
@@ -586,6 +587,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!authContext?.activeWorkspaceId) return;
     void hydrateIntegrationsFromCloud(authContext.activeWorkspaceId);
   }, [authContext?.activeWorkspaceId]);
+
+  useEffect(() => {
+    if (!currentSpaceId || !authContext?.activeWorkspaceId) return;
+    void hydrateGrowRunsFromCloud(currentSpaceId);
+  }, [currentSpaceId, authContext?.activeWorkspaceId]);
 
   useEffect(() => {
     if (localAuthEnabled) {

@@ -14,6 +14,7 @@ import {
   startMqttBridge,
   stopMqttBridge,
 } from './mqtt-bridge';
+import { testTuyaCloudCredentials } from './tuya-sign';
 
 interface MqttTestBody {
   brokerUrl?: string;
@@ -202,11 +203,39 @@ export function integrationsProxyPlugin(): Plugin {
           return;
         }
         sendJson(res, 200, {
-          ok: false,
-          implemented: false,
-          status: 'draft',
-          error: 'Tuya cloud connector not implemented — save region in config only',
+          ok: true,
+          implemented: true,
+          status: 'health-check',
+          note: 'POST /api/integrations/tuya/test with accessId + accessSecret — no runtime injection',
         });
+      });
+
+      server.middlewares.use('/api/integrations/tuya/test', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        try {
+          const raw = await readBody(req);
+          const body = JSON.parse(raw || '{}') as {
+            region?: string;
+            accessId?: string;
+            accessSecret?: string;
+            timeoutMs?: number;
+          };
+          const result = await testTuyaCloudCredentials({
+            region: body.region ?? 'eu',
+            accessId: body.accessId ?? '',
+            accessSecret: body.accessSecret ?? '',
+            timeoutMs: Math.min(Math.max(Number(body.timeoutMs) || 8000, 2000), 15000),
+          });
+          sendJson(res, 200, result);
+        } catch (e) {
+          sendJson(res, 200, {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Request failed',
+          });
+        }
       });
     },
   };

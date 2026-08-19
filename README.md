@@ -30,6 +30,8 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run verify:ops` | Check `.env` for cloud/kb readiness |
 | `npm run verify:stripe` | Check Stripe price IDs and secrets |
 
+Deploy: `scripts/DEPLOY.md` (Vercel). Migrations include `013_grow_runs.sql`.
+
 ## Architecture
 
 ```

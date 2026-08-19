@@ -457,6 +457,13 @@ const en = {
     mqttAddMapping: 'Add mapping',
     mqttMappingsEmpty: 'No rules — add pattern and deviceId/inputId',
     tuyaSoon: 'Cloud connector — next release',
+    tuyaAccessId: 'Access ID',
+    tuyaAccessSecret: 'Access Secret',
+    tuyaTest: 'Test Cloud API',
+    tuyaOk: 'Tuya Cloud OK',
+    tuyaFail: 'Connection failed',
+    tuyaNoCreds: 'Enter Access ID and Access Secret',
+    tuyaHint: 'Token health check. Device mapping into the twin ships after hub transport.',
   },
   growRun: {
     title: 'GrowRun',

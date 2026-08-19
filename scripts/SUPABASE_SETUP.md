@@ -21,6 +21,7 @@ Run in order:
 10. `supabase/migrations/010_admin_ai_consciousness.sql`
 11. `supabase/migrations/011_knowledge_rag.sql` — pgvector knowledge base + admin RPCs
 12. `supabase/migrations/012_admin_ops_v5.sql` — admin V5: farm rename, member roles, audit filters, KB categories stats, AI farms overview
+13. `supabase/migrations/013_grow_runs.sql` — GrowRun cycles + telemetry cloud snapshots
 
 Or with Supabase CLI:
 

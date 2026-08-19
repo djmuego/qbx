@@ -22,6 +22,7 @@ import {
   stopMqttTopicMonitor,
   testHomeAssistantConnection,
   testMqttBrokerConnection,
+  testTuyaCloudConnection,
 } from '../../../application/integrations/integrations-connection.api';
 import type { MqttBridgeMessageResult } from '../../../application/integrations/integrations-connection.api';
 import type { WorkspaceIntegrationsConfig } from '../../../domain/integrations/hub-integration.types';
@@ -41,6 +42,8 @@ export const AccountIntegrationsSection: React.FC = () => {
   const [haTestResult, setHaTestResult] = useState<string | null>(null);
   const [haEntitiesBusy, setHaEntitiesBusy] = useState(false);
   const [haStatesBusy, setHaStatesBusy] = useState(false);
+  const [tuyaTestBusy, setTuyaTestBusy] = useState(false);
+  const [tuyaTestResult, setTuyaTestResult] = useState<string | null>(null);
   const [mqttMonitorBusy, setMqttMonitorBusy] = useState(false);
   const [mqttMonitorActive, setMqttMonitorActive] = useState(false);
   const [mqttMessages, setMqttMessages] = useState<MqttBridgeMessageResult[]>([]);
@@ -386,13 +389,38 @@ export const AccountIntegrationsSection: React.FC = () => {
     }
   };
 
+  const runTuyaTest = async () => {
+    if (!config.tuya.accessId?.trim() || !config.tuya.accessSecret?.trim()) {
+      setTuyaTestResult(t('integrations.tuyaNoCreds', 'Укажите Access ID и Access Secret'));
+      return;
+    }
+    setTuyaTestBusy(true);
+    setTuyaTestResult(null);
+    try {
+      const result = await testTuyaCloudConnection({
+        region: config.tuya.region,
+        accessId: config.tuya.accessId,
+        accessSecret: config.tuya.accessSecret,
+      });
+      setTuyaTestResult(
+        result.ok
+          ? `${t('integrations.tuyaOk', 'Tuya Cloud OK')}${result.latencyMs ? ` (${result.latencyMs}ms)` : ''}`
+          : (result.error ?? t('integrations.tuyaFail', 'Не удалось подключиться')),
+      );
+    } catch (e) {
+      setTuyaTestResult(e instanceof Error ? e.message : t('integrations.tuyaFail', 'Не удалось подключиться'));
+    } finally {
+      setTuyaTestBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <AccountCard
         title={t('integrations.title', 'Внешние хабы')}
         description={t(
           'integrations.hint',
-          'Внешние хабы: health-check, MQTT topic monitor (dev proxy) и HA entity discovery. Не инжектит fake telemetry в hardware mode.',
+          'Внешние хабы: MQTT monitor, HA auto-poll states (advisory), Tuya token check. Runtime injection только в sim bridge.',
         )}
       >
         <p className="text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl px-3 py-2">
@@ -747,6 +775,17 @@ export const AccountIntegrationsSection: React.FC = () => {
               <Cloud className="w-4 h-4 text-slate-500" />
               <p className="text-sm font-semibold">Tuya</p>
             </div>
+            <label className="flex items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={config.tuya.enabled}
+                disabled={!allowed}
+                onChange={(e) =>
+                  proGate(() => persist({ ...config, tuya: { ...config.tuya, enabled: e.target.checked } }))
+                }
+              />
+              {t('integrations.enabled', 'Включить')}
+            </label>
             <select
               disabled={!allowed}
               value={config.tuya.region}
@@ -760,8 +799,40 @@ export const AccountIntegrationsSection: React.FC = () => {
               <option value="eu">EU</option>
               <option value="us">US</option>
               <option value="cn">CN</option>
+              <option value="in">IN</option>
             </select>
-            <p className="text-[11px] text-slate-400">{t('integrations.tuyaSoon', 'Cloud connector — следующий релиз')}</p>
+            <input
+              disabled={!allowed}
+              value={config.tuya.accessId ?? ''}
+              onChange={(e) => setConfig({ ...config, tuya: { ...config.tuya, accessId: e.target.value } })}
+              onBlur={() => proGate(() => persist(config))}
+              placeholder={t('integrations.tuyaAccessId', 'Access ID')}
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
+            />
+            <input
+              disabled={!allowed}
+              type="password"
+              value={config.tuya.accessSecret ?? ''}
+              onChange={(e) => setConfig({ ...config, tuya: { ...config.tuya, accessSecret: e.target.value } })}
+              onBlur={() => proGate(() => persist(config))}
+              placeholder={t('integrations.tuyaAccessSecret', 'Access Secret')}
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
+            />
+            <button
+              type="button"
+              disabled={!allowed || tuyaTestBusy}
+              onClick={() => proGate(() => void runTuyaTest())}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+            >
+              <PlugZap className="w-3.5 h-3.5" />
+              {tuyaTestBusy
+                ? t('integrations.testing', 'Проверка…')
+                : t('integrations.tuyaTest', 'Проверить Cloud API')}
+            </button>
+            {tuyaTestResult && <p className="text-[11px] text-slate-500">{tuyaTestResult}</p>}
+            <p className="text-[11px] text-slate-400">
+              {t('integrations.tuyaHint', 'Health-check токена. Маппинг устройств в twin — после hub transport.')}
+            </p>
           </section>
         </div>
 

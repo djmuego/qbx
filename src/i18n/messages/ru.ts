@@ -457,6 +457,13 @@ const ru = {
     mqttAddMapping: 'Добавить',
     mqttMappingsEmpty: 'Нет правил — добавьте pattern и deviceId/inputId',
     tuyaSoon: 'Cloud connector — следующий релиз',
+    tuyaAccessId: 'Access ID',
+    tuyaAccessSecret: 'Access Secret',
+    tuyaTest: 'Проверить Cloud API',
+    tuyaOk: 'Tuya Cloud OK',
+    tuyaFail: 'Не удалось подключиться',
+    tuyaNoCreds: 'Укажите Access ID и Access Secret',
+    tuyaHint: 'Health-check токена. Маппинг устройств в twin — после hub transport.',
   },
   growRun: {
     title: 'GrowRun',

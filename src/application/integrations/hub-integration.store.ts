@@ -32,6 +32,7 @@ export function loadIntegrationsConfig(workspaceId: string): WorkspaceIntegratio
         ...parsed.homeAssistant,
         entityBindings: parsed.homeAssistant?.entityBindings ?? defaults.homeAssistant.entityBindings,
       },
+      tuya: { ...defaults.tuya, ...parsed.tuya },
     };
   } catch {
     return defaultIntegrationsConfig();

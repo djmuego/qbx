@@ -44,7 +44,36 @@ export function appendGrowRunTelemetrySample(
   };
   const next = [...existing, full].slice(-MAX_SAMPLES_PER_RUN);
   localStorage.setItem(key(spaceId, sample.growRunId), JSON.stringify(next));
+  scheduleTelemetryCloudSave(spaceId, sample.growRunId, next);
   return full;
+}
+
+const telemetryCloudTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+function scheduleTelemetryCloudSave(
+  spaceId: string,
+  growRunId: string,
+  samples: GrowRunTelemetrySample[],
+): void {
+  const timerKey = `${spaceId}:${growRunId}`;
+  const existingTimer = telemetryCloudTimers.get(timerKey);
+  if (existingTimer) clearTimeout(existingTimer);
+  const timer = setTimeout(() => {
+    telemetryCloudTimers.delete(timerKey);
+    void import('./grow-run-cloud.persistence').then((m) =>
+      m.cloudSaveGrowRunTelemetry(spaceId, growRunId, samples),
+    );
+  }, 3000);
+  telemetryCloudTimers.set(timerKey, timer);
+}
+
+export function replaceGrowRunTelemetry(
+  spaceId: string,
+  growRunId: string,
+  samples: GrowRunTelemetrySample[],
+): void {
+  if (!spaceId || !growRunId || !hasBrowserStorage()) return;
+  localStorage.setItem(key(spaceId, growRunId), JSON.stringify(samples.slice(-MAX_SAMPLES_PER_RUN)));
 }
 
 export function summarizeGrowRunTelemetry(spaceId: string, growRunId: string): GrowRunTelemetrySummary {

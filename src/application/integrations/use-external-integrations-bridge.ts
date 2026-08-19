@@ -20,20 +20,24 @@ export function useExternalIntegrationsBridge(
   workspaceId: string | undefined,
 ): void {
   useEffect(() => {
-    if (!runtimeService || !workspaceId || !isSimulatorMode()) return;
+    if (!workspaceId) return;
 
     const run = async () => {
       const config = loadIntegrationsConfig(workspaceId);
-      if (!config.simBridgeEnabled) return;
-
       const advisory = loadIntegrationsAdvisory(workspaceId);
       const mqttReadings = advisory?.readings.filter((r) => r.source === 'mqtt') ?? [];
 
       let haReadings: IntegrationsAdvisoryReading[] = [];
-      try {
-        haReadings = await pollHomeAssistantBindings(config);
-      } catch {
-        haReadings = [];
+      const haReady =
+        config.homeAssistant.enabled &&
+        Boolean(config.homeAssistant.accessToken?.trim()) &&
+        config.homeAssistant.entityBindings.length > 0;
+      if (haReady) {
+        try {
+          haReadings = await pollHomeAssistantBindings(config);
+        } catch {
+          haReadings = [];
+        }
       }
 
       saveIntegrationsAdvisory({
@@ -46,10 +50,13 @@ export function useExternalIntegrationsBridge(
         readings: [...mqttReadings, ...haReadings].slice(-24),
       });
 
-      applyExternalReadingsToRuntime(runtimeService, [
-        ...readingsFromAdvisory(mqttReadings),
-        ...readingsFromAdvisory(haReadings),
-      ]);
+      const injectIntoTwin = isSimulatorMode() && config.simBridgeEnabled && runtimeService;
+      if (injectIntoTwin) {
+        applyExternalReadingsToRuntime(runtimeService, [
+          ...readingsFromAdvisory(mqttReadings),
+          ...readingsFromAdvisory(haReadings),
+        ]);
+      }
     };
 
     void run();

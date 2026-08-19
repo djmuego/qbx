@@ -31,6 +31,8 @@ export interface HomeAssistantIntegrationConfig {
 export interface TuyaIntegrationConfig {
   enabled: boolean;
   region: string;
+  accessId?: string;
+  accessSecret?: string;
 }
 
 export interface QbxZigbeeIntegrationConfig {
@@ -54,7 +56,7 @@ export function defaultIntegrationsConfig(): WorkspaceIntegrationsConfig {
     simBridgeEnabled: false,
     mqtt: { enabled: false, brokerUrl: '', port: 1883, topicPrefix: 'qbx/', useTls: false, topicMappings: [] },
     homeAssistant: { enabled: false, baseUrl: '', accessToken: '', entityBindings: [] },
-    tuya: { enabled: false, region: 'eu' },
+    tuya: { enabled: false, region: 'eu', accessId: '', accessSecret: '' },
     qbxZigbee: { enabled: false, note: '' },
   };
 }

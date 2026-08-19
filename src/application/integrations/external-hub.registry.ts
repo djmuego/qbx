@@ -28,13 +28,13 @@ export const EXTERNAL_HUB_CONNECTORS: HubConnectorDescriptor[] = [
     kind: 'home-assistant',
     label: 'Home Assistant',
     status: 'discovery',
-    description: 'API health check + entity discovery. No auto-control.',
+    description: 'API health check + entity discovery + auto-poll states (advisory). No auto-control.',
   },
   {
     kind: 'tuya',
     label: 'Tuya Cloud',
-    status: 'draft',
-    description: 'Config draft only — cloud connector not implemented.',
+    status: 'health-check',
+    description: 'Cloud token health check. Device mapping ships after hub transport.',
   },
 ];
 

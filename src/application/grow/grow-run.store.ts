@@ -29,6 +29,13 @@ function saveGrowRuns(spaceId: string, runs: GrowRun[]): void {
   if (!spaceId || typeof window === 'undefined') return;
   localStorage.setItem(key(spaceId), JSON.stringify(runs));
   notifyGrowRunUpdated();
+  void import('./grow-run-cloud.persistence').then((m) => m.cloudSaveGrowRuns(spaceId, runs));
+}
+
+export function replaceGrowRuns(spaceId: string, runs: GrowRun[]): void {
+  if (!spaceId || typeof window === 'undefined') return;
+  localStorage.setItem(key(spaceId), JSON.stringify(runs));
+  notifyGrowRunUpdated();
 }
 
 export function getActiveGrowRun(spaceId: string): GrowRun | null {
