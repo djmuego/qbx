@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Download } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { GrowRunTelemetryChart, type TelemetryChartSeries } from '../grow/GrowRunTelemetryChart';
 import { useApp } from '../../context/AppContext';
 import { useLocale } from '../../i18n/LocaleContext';
 import {
@@ -21,31 +22,6 @@ interface GrowRunDetailModalProps {
 }
 
 const STAGE_OPTIONS = Object.keys(GROW_STAGE_LABELS) as GrowStageId[];
-
-function Sparkline({ values }: { values: number[] }) {
-  if (values.length === 0) {
-    return <p className="text-[11px] text-slate-500">—</p>;
-  }
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-
-  return (
-    <div className="flex items-end gap-0.5 h-12">
-      {values.map((value, idx) => {
-        const height = 20 + Math.round(((value - min) / range) * 80);
-        return (
-          <div
-            key={`${idx}-${value}`}
-            className="flex-1 min-w-[2px] rounded-sm bg-lime-500/70 dark:bg-lime-400/60"
-            style={{ height: `${height}%` }}
-            title={`${value.toFixed(1)}`}
-          />
-        );
-      })}
-    </div>
-  );
-}
 
 export const GrowRunDetailModal: React.FC<GrowRunDetailModalProps> = ({ open, onClose }) => {
   const { currentSpaceId } = useApp();
@@ -71,14 +47,22 @@ export const GrowRunDetailModal: React.FC<GrowRunDetailModalProps> = ({ open, on
   );
   const summary = currentSpaceId && run ? summarizeGrowRunTelemetry(currentSpaceId, run.id) : null;
 
-  const tempSeries = useMemo(
-    () =>
-      samples
-        .slice(-48)
-        .map((s) => s.tempC)
-        .filter((v): v is number => v != null),
-    [samples],
-  );
+  const chartSeries = useMemo((): TelemetryChartSeries[] => {
+    const slice = samples.slice(-64);
+    const toPoints = (pick: (s: (typeof slice)[number]) => number | null) =>
+      slice
+        .map((s) => {
+          const value = pick(s);
+          return value != null ? { timestampMs: s.timestampMs, value } : null;
+        })
+        .filter((p): p is { timestampMs: number; value: number } => p != null);
+
+    return [
+      { id: 'temp', label: t('growRun.chartTemp', 'Temp'), color: '#84cc16', unit: '°C', points: toPoints((s) => s.tempC) },
+      { id: 'rh', label: t('growRun.chartRh', 'RH'), color: '#38bdf8', unit: '%', points: toPoints((s) => s.humidityPct) },
+      { id: 'vpd', label: t('growRun.chartVpd', 'VPD'), color: '#a78bfa', unit: 'kPa', points: toPoints((s) => s.vpdKpa) },
+    ];
+  }, [samples, t]);
 
   const formatWhen = (ms: number | null) =>
     ms
@@ -147,9 +131,9 @@ export const GrowRunDetailModal: React.FC<GrowRunDetailModalProps> = ({ open, on
 
           <div>
             <p className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 mb-1">
-              {t('growRun.tempChart', 'Температура (последние сэмплы)')}
+              {t('growRun.chartsTitle', 'Телеметрия цикла')}
             </p>
-            <Sparkline values={tempSeries} />
+            <GrowRunTelemetryChart series={chartSeries} />
           </div>
 
           <button

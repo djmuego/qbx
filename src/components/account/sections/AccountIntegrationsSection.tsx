@@ -9,9 +9,13 @@ import {
   loadIntegrationsConfig,
   saveIntegrationsConfig,
 } from '../../../application/integrations/hub-integration.store';
-import { saveIntegrationsAdvisory } from '../../../application/integrations/integrations-advisory.store';
+import {
+  loadIntegrationsAdvisory,
+  saveIntegrationsAdvisory,
+} from '../../../application/integrations/integrations-advisory.store';
 import {
   fetchHomeAssistantEntities,
+  fetchHomeAssistantBoundStates,
   fetchMqttBridgeMessages,
   fetchMqttBridgeStatus,
   startMqttTopicMonitor,
@@ -23,6 +27,7 @@ import type { MqttBridgeMessageResult } from '../../../application/integrations/
 import type { WorkspaceIntegrationsConfig } from '../../../domain/integrations/hub-integration.types';
 import type { MqttTopicMapping } from '../../../domain/integrations/mqtt-topic-mapping.types';
 import type { HomeAssistantEntityBinding } from '../../../domain/integrations/home-assistant-binding.types';
+import { parseHomeAssistantNumericState } from '../../../application/integrations/home-assistant-state-parser';
 
 export const AccountIntegrationsSection: React.FC = () => {
   const { t } = useLocale();
@@ -35,6 +40,7 @@ export const AccountIntegrationsSection: React.FC = () => {
   const [haTestBusy, setHaTestBusy] = useState(false);
   const [haTestResult, setHaTestResult] = useState<string | null>(null);
   const [haEntitiesBusy, setHaEntitiesBusy] = useState(false);
+  const [haStatesBusy, setHaStatesBusy] = useState(false);
   const [mqttMonitorBusy, setMqttMonitorBusy] = useState(false);
   const [mqttMonitorActive, setMqttMonitorActive] = useState(false);
   const [mqttMessages, setMqttMessages] = useState<MqttBridgeMessageResult[]>([]);
@@ -318,6 +324,68 @@ export const AccountIntegrationsSection: React.FC = () => {
     }
   };
 
+  const runHaStatePoll = async () => {
+    if (!config.homeAssistant.baseUrl.trim()) {
+      setHaTestResult(t('integrations.haNoUrl', 'Укажите URL Home Assistant'));
+      return;
+    }
+    if (!config.homeAssistant.accessToken?.trim()) {
+      setHaTestResult(t('integrations.haNoToken', 'Укажите long-lived access token'));
+      return;
+    }
+    if (config.homeAssistant.entityBindings.length === 0) {
+      setHaTestResult(t('integrations.haBindingsEmpty', 'Нет привязок'));
+      return;
+    }
+    setHaStatesBusy(true);
+    setHaTestResult(null);
+    try {
+      const result = await fetchHomeAssistantBoundStates({
+        baseUrl: config.homeAssistant.baseUrl,
+        accessToken: config.homeAssistant.accessToken,
+        entityIds: config.homeAssistant.entityBindings.map((b) => b.entityId),
+      });
+      if (result.ok && result.states) {
+        const summary = result.states.map((s) => `${s.entityId}=${s.state}`).join(', ');
+        setHaTestResult(`${t('integrations.haStatesOk', 'States')}: ${summary}`);
+        if (activeWorkspaceId) {
+          const now = Date.now();
+          const readings = config.homeAssistant.entityBindings.flatMap((binding) => {
+            const state = result.states?.find((s) => s.entityId === binding.entityId);
+            if (!state) return [];
+            return [
+              {
+                source: 'home_assistant' as const,
+                entityId: binding.entityId,
+                deviceId: binding.deviceId,
+                inputId: binding.inputId,
+                value: parseHomeAssistantNumericState(state.state),
+                unit: state.unit,
+                receivedAtMs: now,
+              },
+            ];
+          });
+          const prev = loadIntegrationsAdvisory(activeWorkspaceId);
+          saveIntegrationsAdvisory({
+            workspaceId: activeWorkspaceId,
+            updatedAtMs: now,
+            mqttMonitorActive: prev?.mqttMonitorActive ?? false,
+            mqttMappingCount: config.mqtt.topicMappings.length,
+            haBindingCount: config.homeAssistant.entityBindings.length,
+            haEntityCount: config.homeAssistant.lastDiscovery?.entityCount ?? prev?.haEntityCount ?? null,
+            readings: [...(prev?.readings.filter((r) => r.source === 'mqtt') ?? []), ...readings].slice(-24),
+          });
+        }
+      } else {
+        setHaTestResult(result.error ?? t('integrations.haFail', 'Не удалось подключиться'));
+      }
+    } catch (e) {
+      setHaTestResult(e instanceof Error ? e.message : t('integrations.haFail', 'Не удалось подключиться'));
+    } finally {
+      setHaStatesBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <AccountCard
@@ -330,6 +398,18 @@ export const AccountIntegrationsSection: React.FC = () => {
         <p className="text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl px-3 py-2">
           {t('integrations.qbxHubNote', 'Собственный QBX Zigbee Hub подключается позже — железо в пути.')}
         </p>
+
+        <label className="flex items-center gap-2 text-xs mt-3">
+          <input
+            type="checkbox"
+            checked={config.simBridgeEnabled}
+            disabled={!allowed}
+            onChange={(e) =>
+              proGate(() => persist({ ...config, simBridgeEnabled: e.target.checked }))
+            }
+          />
+          {t('integrations.simBridge', 'Sim bridge: MQTT/HA → twin sensors (только dev:sim)')}
+        </label>
 
         {!allowed && (
           <p className="text-xs text-violet-700 dark:text-violet-300 mt-2 flex items-center gap-1">
@@ -563,26 +643,36 @@ export const AccountIntegrationsSection: React.FC = () => {
               placeholder={t('integrations.haToken', 'Long-lived access token')}
               className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 disabled:opacity-60"
             />
-            <button
-              type="button"
-              disabled={!allowed || haTestBusy}
-              onClick={() => proGate(() => void runHaTest())}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
-            >
-              <PlugZap className="w-3.5 h-3.5" />
-              {haTestBusy ? t('integrations.testing', 'Проверка…') : t('integrations.haTest', 'Проверить API')}
-            </button>
-            <button
-              type="button"
-              disabled={!allowed || haEntitiesBusy}
-              onClick={() => proGate(() => void runHaEntityDiscovery())}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
-            >
-              <Home className="w-3.5 h-3.5" />
-              {haEntitiesBusy
-                ? t('integrations.testing', 'Проверка…')
-                : t('integrations.haEntities', 'Список сущностей')}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={!allowed || haTestBusy}
+                onClick={() => proGate(() => void runHaTest())}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+              >
+                <PlugZap className="w-3.5 h-3.5" />
+                {haTestBusy ? t('integrations.testing', 'Проверка…') : t('integrations.haTest', 'Проверить API')}
+              </button>
+              <button
+                type="button"
+                disabled={!allowed || haEntitiesBusy}
+                onClick={() => proGate(() => void runHaEntityDiscovery())}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+              >
+                <Home className="w-3.5 h-3.5" />
+                {haEntitiesBusy
+                  ? t('integrations.testing', 'Проверка…')
+                  : t('integrations.haEntities', 'Список сущностей')}
+              </button>
+              <button
+                type="button"
+                disabled={!allowed || haStatesBusy}
+                onClick={() => proGate(() => void runHaStatePoll())}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-violet-100 dark:bg-violet-950/50 text-[11px] font-semibold text-violet-800 dark:text-violet-200 disabled:opacity-60"
+              >
+                {haStatesBusy ? t('integrations.testing', 'Проверка…') : t('integrations.haPollStates', 'Poll states')}
+              </button>
+            </div>
             {haTestResult && <p className="text-[11px] text-slate-500">{haTestResult}</p>}
             {config.homeAssistant.lastDiscovery && (
               <p className="text-[10px] text-slate-400">

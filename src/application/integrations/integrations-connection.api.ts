@@ -116,3 +116,23 @@ export async function fetchHomeAssistantEntities(input: {
   });
   return (await response.json()) as HomeAssistantEntitiesResult;
 }
+
+export interface HomeAssistantBoundStatesResult {
+  ok: boolean;
+  states?: Array<{ entityId: string; state: string; unit?: string }>;
+  latencyMs?: number;
+  error?: string;
+}
+
+export async function fetchHomeAssistantBoundStates(input: {
+  baseUrl: string;
+  accessToken: string;
+  entityIds: string[];
+}): Promise<HomeAssistantBoundStatesResult> {
+  const response = await fetch('/api/integrations/home-assistant/states', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  return (await response.json()) as HomeAssistantBoundStatesResult;
+}

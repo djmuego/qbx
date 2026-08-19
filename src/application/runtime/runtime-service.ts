@@ -8,7 +8,7 @@ import { MathRandomSource, SeededRandomSource, type RandomSource } from '../../r
 import { QbxRuntime } from '../../runtime/qbx-runtime';
 import { createGateway } from '../../runtime/gateway/gateway-factory';
 import type { DeviceGateway } from '../../runtime/gateway/device-gateway.contract';
-import { getRuntimeMode } from '../../config/runtime-mode';
+import { getRuntimeMode, isSimulatorMode } from '../../config/runtime-mode';
 
 export class RuntimeService {
   private readonly runtime: QbxRuntime;
@@ -128,6 +128,23 @@ export class RuntimeService {
     const snapshot = this.dataLayer.getSnapshot();
     this.runtime.updateConfiguration(snapshot.spaces, snapshot.devices, snapshot.automations);
     this.tick();
+  }
+
+  /** Simulator only — inject mapped external hub reading into a sensor input. */
+  applyExternalSensorReading(sensorId: string, value: number): boolean {
+    if (!isSimulatorMode()) return false;
+    const exists = this.runtime
+      .getView()
+      .devices.some((d) => d.inputs.some((s) => s.id === sensorId && s.type !== 'unused'));
+    if (!exists) return false;
+    this.runtime.setSensorValue(sensorId, value);
+    return true;
+  }
+
+  /** Re-persist simulator view after external injection (no full tick). */
+  refreshView(): void {
+    this.persistRuntimeView();
+    this.notify();
   }
 
   private persistRuntimeView(): void {

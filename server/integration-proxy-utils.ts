@@ -156,3 +156,70 @@ export async function fetchHomeAssistantEntitySummary(
     clearTimeout(timer);
   }
 }
+
+export interface HomeAssistantEntityState {
+  entityId: string;
+  state: string;
+  unit?: string;
+}
+
+export interface HomeAssistantBoundStatesResult {
+  ok: boolean;
+  states?: HomeAssistantEntityState[];
+  latencyMs?: number;
+  error?: string;
+}
+
+export async function fetchHomeAssistantBoundStates(
+  baseUrl: string,
+  accessToken: string,
+  entityIds: string[],
+  timeoutMs: number,
+): Promise<HomeAssistantBoundStatesResult> {
+  const base = normalizeBaseUrl(baseUrl);
+  if (!base) return { ok: false, error: 'baseUrl required' };
+  if (!accessToken.trim()) return { ok: false, error: 'accessToken required' };
+  if (entityIds.length === 0) return { ok: false, error: 'entityIds required' };
+
+  const started = Date.now();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const wanted = new Set(entityIds);
+
+  try {
+    const response = await fetch(`${base}/api/states`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+    });
+    const latencyMs = Date.now() - started;
+    if (!response.ok) {
+      return { ok: false, error: `HTTP ${response.status}`, latencyMs };
+    }
+
+    const all = (await response.json()) as Array<{
+      entity_id: string;
+      state: string;
+      attributes?: { unit_of_measurement?: string };
+    }>;
+
+    const states: HomeAssistantEntityState[] = all
+      .filter((s) => wanted.has(s.entity_id))
+      .map((s) => ({
+        entityId: s.entity_id,
+        state: s.state,
+        unit: s.attributes?.unit_of_measurement,
+      }));
+
+    return { ok: true, states, latencyMs };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : 'Request failed',
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}

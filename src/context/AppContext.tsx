@@ -76,6 +76,7 @@ import {
 } from '../application/grow/grow-run-telemetry.service';
 import { captureRuntimeTelemetrySlice } from '../application/grow/grow-run-telemetry.store';
 import { hydrateIntegrationsFromCloud } from '../application/integrations/hub-integration.store';
+import { useExternalIntegrationsBridge } from '../application/integrations/use-external-integrations-bridge';
 import {
   fetchPlatformConsciousnessCloud,
   fetchWorkspaceAiConfigCloud,
@@ -406,6 +407,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       runtimeService.stopTick();
     };
   }, [runtimeService, dataLayer]);
+
+  useExternalIntegrationsBridge(runtimeService, authContext?.activeWorkspaceId);
 
   useEffect(() => {
     if (!dataLayer) return;

@@ -3,6 +3,7 @@ import { PlugZap, Home, Radio } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLocale } from '../../i18n/LocaleContext';
 import { loadIntegrationsAdvisory } from '../../application/integrations/integrations-advisory.store';
+import { isSimulatorMode } from '../../config/runtime-mode';
 import { loadIntegrationsConfig } from '../../application/integrations/hub-integration.store';
 
 export const IntegrationsStatusTile: React.FC = () => {
@@ -40,6 +41,11 @@ export const IntegrationsStatusTile: React.FC = () => {
             {t('integrations.haEntitiesOk', 'entities').toLowerCase()}
             {config.homeAssistant.entityBindings.length > 0 &&
               ` · ${config.homeAssistant.entityBindings.length} bind`}
+          </li>
+        )}
+        {config.simBridgeEnabled && isSimulatorMode() && (
+          <li className="text-lime-600 dark:text-lime-400">
+            {t('integrations.simBridgeOn', 'Sim bridge ON')}
           </li>
         )}
         {lastReading && (

@@ -3,6 +3,7 @@ import {
   parseBrokerHost,
   readBody,
   sendJson,
+  fetchHomeAssistantBoundStates,
   fetchHomeAssistantEntitySummary,
   testHomeAssistantApi,
   testTcpReachable,
@@ -34,6 +35,7 @@ interface HaTestBody {
   baseUrl?: string;
   accessToken?: string;
   timeoutMs?: number;
+  entityIds?: string[];
 }
 
 export function integrationsProxyPlugin(): Plugin {
@@ -159,6 +161,30 @@ export function integrationsProxyPlugin(): Plugin {
           const result = await fetchHomeAssistantEntitySummary(
             body.baseUrl ?? '',
             body.accessToken ?? '',
+            timeoutMs,
+          );
+          sendJson(res, 200, result);
+        } catch (e) {
+          sendJson(res, 200, {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Request failed',
+          });
+        }
+      });
+
+      server.middlewares.use('/api/integrations/home-assistant/states', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        try {
+          const raw = await readBody(req);
+          const body = JSON.parse(raw || '{}') as HaTestBody;
+          const timeoutMs = Math.min(Math.max(Number(body.timeoutMs) || 8000, 2000), 20000);
+          const result = await fetchHomeAssistantBoundStates(
+            body.baseUrl ?? '',
+            body.accessToken ?? '',
+            body.entityIds ?? [],
             timeoutMs,
           );
           sendJson(res, 200, result);

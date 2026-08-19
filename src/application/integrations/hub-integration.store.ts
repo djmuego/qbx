@@ -21,6 +21,7 @@ export function loadIntegrationsConfig(workspaceId: string): WorkspaceIntegratio
     return {
       ...defaults,
       ...parsed,
+      simBridgeEnabled: parsed.simBridgeEnabled ?? defaults.simBridgeEnabled,
       mqtt: {
         ...defaults.mqtt,
         ...parsed.mqtt,

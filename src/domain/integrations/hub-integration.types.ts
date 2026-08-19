@@ -40,6 +40,8 @@ export interface QbxZigbeeIntegrationConfig {
 
 export interface WorkspaceIntegrationsConfig {
   schemaVersion: 1;
+  /** Simulator only: apply MQTT/HA mapped readings into twin sensors */
+  simBridgeEnabled: boolean;
   mqtt: MqttIntegrationConfig;
   homeAssistant: HomeAssistantIntegrationConfig;
   tuya: TuyaIntegrationConfig;
@@ -49,6 +51,7 @@ export interface WorkspaceIntegrationsConfig {
 export function defaultIntegrationsConfig(): WorkspaceIntegrationsConfig {
   return {
     schemaVersion: 1,
+    simBridgeEnabled: false,
     mqtt: { enabled: false, brokerUrl: '', port: 1883, topicPrefix: 'qbx/', useTls: false, topicMappings: [] },
     homeAssistant: { enabled: false, baseUrl: '', accessToken: '', entityBindings: [] },
     tuya: { enabled: false, region: 'eu' },
