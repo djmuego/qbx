@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "data": [
+    {
+      "id": "dev-1",
+      "spaceId": "space-1",
+      "modelId": "qbx-hub",
+      "modelName": "QBX Hub",
+      "customName": "Контроллер теплицы",
+      "isOnline": true,
+      "inputs": [
+        {
+          "id": "dev1-in1",
+          "portNumber": 1,
+          "hardwareLabel": "IN1",
+          "type": "temperature",
+          "customName": "Температура воздуха",
+          "currentValue": 24.5,
+          "unit": "°C",
+          "optimalMin": 21,
+          "optimalMax": 26,
+          "status": "normal",
+          "showOnHome": true,
+          "history": []
+        },
+        {
+          "id": "dev1-in2",
+          "portNumber": 2,
+          "hardwareLabel": "IN2",
+          "type": "humidity",
+          "customName": "Влажность воздуха",
+          "currentValue": 59,
+          "unit": "%",
+          "optimalMin": 50,
+          "optimalMax": 65,
+          "status": "normal",
+          "showOnHome": true,
+          "history": []
+        },
+        {
+          "id": "dev1-in3",
+          "portNumber": 3,
+          "hardwareLabel": "IN3",
+          "type": "soil_moisture",
+          "customName": "Влажность почвы",
+          "currentValue": 38,
+          "unit": "%",
+          "optimalMin": 45,
+          "optimalMax": 70,
+          "status": "low",
+          "showOnHome": true,
+          "history": []
+        },
+        {
+          "id": "dev1-in4",
+          "portNumber": 4,
+          "hardwareLabel": "IN4",
+          "type": "co2",
+          "customName": "Уровень CO₂",
+          "currentValue": 785,
+          "unit": "ppm",
+          "optimalMin": 600,
+          "optimalMax": 1100,
+          "status": "normal",
+          "showOnHome": true,
+          "history": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "dev1-out1",
+          "portNumber": 1,
+          "hardwareLabel": "OUT1",
+          "type": "lighting",
+          "customName": "Основной свет",
+          "state": true,
+          "isAuto": true,
+          "activeAutomationId": "auto-3",
+          "activeAutomationName": "Освещение (07:00–21:00)"
+        },
+        {
+          "id": "dev1-out2",
+          "portNumber": 2,
+          "hardwareLabel": "OUT2",
+          "type": "ventilation",
+          "customName": "Вытяжка",
+          "state": false,
+          "isAuto": true,
+          "activeAutomationId": "auto-2",
+          "activeAutomationName": "Охлаждение при >28°C"
+        },
+        {
+          "id": "dev1-out3",
+          "portNumber": 3,
+          "hardwareLabel": "OUT3",
+          "type": "watering",
+          "customName": "Полив",
+          "state": false,
+          "isAuto": true,
+          "activeAutomationId": "auto-1",
+          "activeAutomationName": "Автополив при <30%"
+        },
+        {
+          "id": "dev1-out4",
+          "portNumber": 4,
+          "hardwareLabel": "OUT4",
+          "type": "heating",
+          "customName": "Обогрев",
+          "state": false,
+          "isAuto": true,
+          "activeAutomationId": "auto-4",
+          "activeAutomationName": "Защита от холода при <19°C"
+        }
+      ],
+      "firmwareVersion": "v2.4.1",
+      "serialNumber": "QBX-HB-9842",
+      "addedAt": "2026-05-12"
+    },
+    {
+      "id": "dev-2",
+      "spaceId": "space-1",
+      "modelId": "qbx-power-4",
+      "modelName": "QBX Power 4",
+      "customName": "Блок освещения и вентиляции",
+      "isOnline": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "dev2-out1",
+          "portNumber": 1,
+          "hardwareLabel": "OUT1",
+          "type": "lighting",
+          "customName": "Боковая подсветка",
+          "state": true,
+          "isAuto": true
+        },
+        {
+          "id": "dev2-out2",
+          "portNumber": 2,
+          "hardwareLabel": "OUT2",
+          "type": "ventilation",
+          "customName": "Циркуляционный вентилятор",
+          "state": true,
+          "isAuto": true
+        },
+        {
+          "id": "dev2-out3",
+          "portNumber": 3,
+          "hardwareLabel": "OUT3",
+          "type": "humidifier",
+          "customName": "Увлажнитель",
+          "state": false,
+          "isAuto": true
+        },
+        {
+          "id": "dev2-out4",
+          "portNumber": 4,
+          "hardwareLabel": "OUT4",
+          "type": "socket",
+          "customName": "Розетка AUX",
+          "state": false,
+          "isAuto": false
+        }
+      ],
+      "firmwareVersion": "v1.8.0",
+      "serialNumber": "QBX-P4-3319",
+      "addedAt": "2026-05-18"
+    }
+  ]
+}

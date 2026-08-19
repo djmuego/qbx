@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "data": {
+    "theme": "light",
+    "tempUnit": "C",
+    "growPhase": "vegetation",
+    "currentSpaceId": "space-1"
+  }
+}

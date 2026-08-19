@@ -1,0 +1,7 @@
+{
+  "name": "QBX — Quantum BotaniX",
+  "description": "Smart Growing Ecosystem — единая система умных устройств для выращивания растений.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

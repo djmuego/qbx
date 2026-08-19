@@ -1,0 +1,1896 @@
+[
+  {
+    "id": "home-crops--1",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 24,
+    "max": 26,
+    "raw": "24–26 °C день",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--2",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 22,
+    "max": 24,
+    "raw": "22–24 °C, ночь не ниже ~16 °C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--3",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 55,
+    "max": 65,
+    "raw": "55–65 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--4",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--5",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--6",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--7",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 24,
+    "max": 28,
+    "raw": "24–28 °C день, не ниже 18 °C ночь",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--8",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70 % (любит влажнее томата)",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--9",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 60,
+    "max": 75,
+    "raw": "60–75 %, не допускать длительной сухости",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--10",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 24,
+    "max": 27,
+    "raw": "24–27 °C день; <15 °C — стресс",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--11",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--12",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 45,
+    "max": 60,
+    "raw": "45–60 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--13",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 18,
+    "max": 22,
+    "raw": "18–22 °C (перегрев → горькость, стрелка)",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--14",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 50,
+    "max": 65,
+    "raw": "50–65 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--15",
+    "docSlug": "home-crops",
+    "metric": "Свет",
+    "unit": "ч",
+    "min": 14,
+    "max": 16,
+    "raw": "14–16 ч, умеренная интенсивность",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--16",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 55,
+    "max": 70,
+    "raw": "55–70 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--17",
+    "docSlug": "home-crops",
+    "metric": "Температура",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26 °C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--18",
+    "docSlug": "home-crops",
+    "metric": "RH",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60 %",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "home-crops--19",
+    "docSlug": "home-crops",
+    "metric": "Почва",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55 %, не заливать",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "microclimate--1",
+    "docSlug": "microclimate",
+    "metric": "День",
+    "unit": "°C",
+    "min": 22,
+    "max": 28,
+    "raw": "22–28 °C (зависит от культуры)",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "microclimate--2",
+    "docSlug": "microclimate",
+    "metric": "Ночь",
+    "unit": "°C",
+    "min": 2,
+    "max": 4,
+    "raw": "На 2–4 °C ниже дня — нормально",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "microclimate--3",
+    "docSlug": "microclimate",
+    "metric": "Проращивание / рассада",
+    "unit": "%",
+    "min": 65,
+    "max": 75,
+    "raw": "65–75 %",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "microclimate--4",
+    "docSlug": "microclimate",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 55,
+    "max": 65,
+    "raw": "55–65 %",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "microclimate--5",
+    "docSlug": "microclimate",
+    "metric": "Цветение / плодоношение",
+    "unit": "%",
+    "min": 40,
+    "max": 55,
+    "raw": "40–55 %",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "vpd-and-humidity--1",
+    "docSlug": "vpd-and-humidity",
+    "metric": "Рассада",
+    "min": 0.6,
+    "max": 0.9,
+    "raw": "0.6–0.9",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals"
+    ]
+  },
+  {
+    "id": "vpd-and-humidity--2",
+    "docSlug": "vpd-and-humidity",
+    "metric": "Вегетация",
+    "min": 0.8,
+    "max": 1.1,
+    "raw": "0.8–1.1",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals"
+    ]
+  },
+  {
+    "id": "vpd-and-humidity--3",
+    "docSlug": "vpd-and-humidity",
+    "metric": "Цветение",
+    "min": 1,
+    "max": 1.3,
+    "raw": "1.0–1.3",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-vpd-fundamentals"
+    ]
+  },
+  {
+    "id": "lighting-ppfd-dli--1",
+    "docSlug": "lighting-ppfd-dli",
+    "metric": "Рассада / микрозелень",
+    "min": 10,
+    "max": 15,
+    "raw": "10–15",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-lighting-dli"
+    ]
+  },
+  {
+    "id": "lighting-ppfd-dli--2",
+    "docSlug": "lighting-ppfd-dli",
+    "metric": "Листовые (салат, базилик)",
+    "min": 12,
+    "max": 17,
+    "raw": "12–17",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-lighting-dli"
+    ]
+  },
+  {
+    "id": "lighting-ppfd-dli--3",
+    "docSlug": "lighting-ppfd-dli",
+    "metric": "Томат/огурец вега",
+    "min": 20,
+    "max": 30,
+    "raw": "20–30",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-lighting-dli"
+    ]
+  },
+  {
+    "id": "lighting-ppfd-dli--4",
+    "docSlug": "lighting-ppfd-dli",
+    "metric": "Цветение/плоды (высокий свет)",
+    "min": 25,
+    "max": 35,
+    "raw": "25–35+",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-cea-lighting-dli"
+    ]
+  },
+  {
+    "id": "watering-soil--1",
+    "docSlug": "watering-soil",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 60,
+    "max": 75,
+    "raw": "60–75 %",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-substrate-dryback-steering",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "watering-soil--2",
+    "docSlug": "watering-soil",
+    "metric": "Вегетация (овощи)",
+    "unit": "%",
+    "min": 45,
+    "max": 65,
+    "raw": "45–65 %",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-substrate-dryback-steering",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "watering-soil--3",
+    "docSlug": "watering-soil",
+    "metric": "Цветение / плод",
+    "unit": "%",
+    "min": 40,
+    "max": 55,
+    "raw": "40–55 % (часто суше, чем на веге)",
+    "trust": "VERIFIED",
+    "sourceIds": [
+      "src-substrate-dryback-steering",
+      "src-extension-horticulture-primer"
+    ]
+  },
+  {
+    "id": "crops--basil--1",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 22,
+    "max": 24,
+    "raw": "22–24°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--2",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--3",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 55,
+    "max": 65,
+    "raw": "55–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--4",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "min": 10,
+    "max": 14,
+    "raw": "10–14",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--5",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--6",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--7",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--8",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 8,
+    "max": 12,
+    "raw": "8–12%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--9",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "min": 12,
+    "max": 17,
+    "raw": "12–17",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--10",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "unit": "ч",
+    "min": 14,
+    "max": 16,
+    "raw": "14–16 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--11",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "unit": "°C",
+    "min": 20,
+    "max": 24,
+    "raw": "20–24°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--12",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--13",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 40,
+    "max": 50,
+    "raw": "40–50%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--14",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 10,
+    "max": 15,
+    "raw": "10–15%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--15",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "min": 14,
+    "max": 18,
+    "raw": "14–18",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--16",
+    "docSlug": "crops--basil",
+    "metric": "Цветение",
+    "unit": "ч",
+    "min": 12,
+    "max": 14,
+    "raw": "12–14 ч (срезка до цвета)",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--17",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "min": 0.8,
+    "max": 1.2,
+    "raw": "0.8–1.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--18",
+    "docSlug": "crops--basil",
+    "metric": "Рассада",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--19",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "min": 1.4,
+    "max": 2,
+    "raw": "1.4–2.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--basil--20",
+    "docSlug": "crops--basil",
+    "metric": "Вегетация",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--1",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 24,
+    "max": 26,
+    "raw": "24–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--2",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 70,
+    "max": 80,
+    "raw": "70–80%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--3",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 65,
+    "max": 75,
+    "raw": "65–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--4",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "min": 12,
+    "max": 16,
+    "raw": "12–16",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--5",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 24,
+    "max": 28,
+    "raw": "24–28°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--6",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--7",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 60,
+    "max": 75,
+    "raw": "60–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--8",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 5,
+    "max": 8,
+    "raw": "5–8%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--9",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "unit": "ч",
+    "min": 16,
+    "max": 18,
+    "raw": "16–18 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--10",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "min": 22,
+    "max": 30,
+    "raw": "22–30",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--11",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--12",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 60,
+    "max": 65,
+    "raw": "60–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--13",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 55,
+    "max": 70,
+    "raw": "55–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--14",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 8,
+    "max": 12,
+    "raw": "8–12%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--15",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "unit": "ч",
+    "min": 14,
+    "max": 16,
+    "raw": "14–16 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--16",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "min": 25,
+    "max": 32,
+    "raw": "25–32",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--17",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "min": 1,
+    "max": 1.2,
+    "raw": "1.0–1.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--18",
+    "docSlug": "crops--cucumber",
+    "metric": "Рассада",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--19",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "min": 1.6,
+    "max": 2.2,
+    "raw": "1.6–2.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--20",
+    "docSlug": "crops--cucumber",
+    "metric": "Вегетация",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--21",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "min": 2,
+    "max": 2.8,
+    "raw": "2.0–2.8",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--cucumber--22",
+    "docSlug": "crops--cucumber",
+    "metric": "Плодоношение",
+    "min": 5.5,
+    "max": 5.8,
+    "raw": "5.5–5.8",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--1",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 18,
+    "max": 20,
+    "raw": "18–20°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--2",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 60,
+    "max": 75,
+    "raw": "60–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--3",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 65,
+    "max": 75,
+    "raw": "65–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--4",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "min": 10,
+    "max": 14,
+    "raw": "10–14",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--5",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 18,
+    "max": 22,
+    "raw": "18–22°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--6",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 50,
+    "max": 65,
+    "raw": "50–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--7",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 55,
+    "max": 70,
+    "raw": "55–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--8",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 5,
+    "max": 8,
+    "raw": "5–8%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--9",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "min": 12,
+    "max": 17,
+    "raw": "12–17",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--10",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "unit": "ч",
+    "min": 14,
+    "max": 16,
+    "raw": "14–16 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--11",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "min": 0.8,
+    "max": 1.2,
+    "raw": "0.8–1.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--12",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Рассада",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--13",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "min": 1.2,
+    "max": 1.8,
+    "raw": "1.2–1.8",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--lettuce-leafy--14",
+    "docSlug": "crops--lettuce-leafy",
+    "metric": "Вегетация",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--microgreens--1",
+    "docSlug": "crops--microgreens",
+    "metric": "20–24°C",
+    "unit": "°C",
+    "min": 20,
+    "max": 24,
+    "raw": "20–24°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--microgreens--2",
+    "docSlug": "crops--microgreens",
+    "metric": "20–24°C",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--microgreens--3",
+    "docSlug": "crops--microgreens",
+    "metric": "20–24°C",
+    "min": 10,
+    "max": 15,
+    "raw": "10–15",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--microgreens--4",
+    "docSlug": "crops--microgreens",
+    "metric": "20–24°C",
+    "unit": "ч",
+    "min": 12,
+    "max": 16,
+    "raw": "12–16 ч, близко к кроне",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--1",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 24,
+    "max": 26,
+    "raw": "24–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--2",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 65,
+    "max": 75,
+    "raw": "65–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--3",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--4",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "min": 12,
+    "max": 16,
+    "raw": "12–16",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--5",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 24,
+    "max": 27,
+    "raw": "24–27°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--6",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--7",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 45,
+    "max": 60,
+    "raw": "45–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--8",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 8,
+    "max": 12,
+    "raw": "8–12%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--9",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "min": 20,
+    "max": 28,
+    "raw": "20–28",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--10",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "unit": "ч",
+    "min": 16,
+    "max": 18,
+    "raw": "16–18 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--11",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--12",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--13",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--14",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 10,
+    "max": 15,
+    "raw": "10–15%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--15",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "min": 25,
+    "max": 32,
+    "raw": "25–32",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--16",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение",
+    "unit": "ч",
+    "min": 12,
+    "max": 14,
+    "raw": "12–14 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--17",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--18",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 45,
+    "max": 50,
+    "raw": "45–50%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--19",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--20",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 10,
+    "max": 18,
+    "raw": "10–18%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--21",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "min": 25,
+    "max": 35,
+    "raw": "25–35",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--22",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Плодоношение",
+    "unit": "ч",
+    "min": 12,
+    "max": 14,
+    "raw": "12–14 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--23",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "min": 1,
+    "max": 1.3,
+    "raw": "1.0–1.3",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--24",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Рассада",
+    "min": 5.8,
+    "max": 6.2,
+    "raw": "5.8–6.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--25",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "min": 1.8,
+    "max": 2.2,
+    "raw": "1.8–2.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--26",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Вегетация",
+    "min": 5.8,
+    "max": 6.2,
+    "raw": "5.8–6.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--27",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение/плоды",
+    "min": 2,
+    "max": 2.6,
+    "raw": "2.0–2.6",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--pepper-sweet--28",
+    "docSlug": "crops--pepper-sweet",
+    "metric": "Цветение/плоды",
+    "min": 5.8,
+    "max": 6,
+    "raw": "5.8–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--1",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 18,
+    "max": 24,
+    "raw": "18–24°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--2",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--3",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 50,
+    "max": 65,
+    "raw": "50–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--4",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 5,
+    "max": 10,
+    "raw": "5–10%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--5",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "min": 15,
+    "max": 22,
+    "raw": "15–22",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--6",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "unit": "ч",
+    "min": 14,
+    "max": 16,
+    "raw": "14–16 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--7",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "unit": "°C",
+    "min": 18,
+    "max": 22,
+    "raw": "18–22°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--8",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 55,
+    "max": 65,
+    "raw": "55–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--9",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--10",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 8,
+    "max": 12,
+    "raw": "8–12%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--11",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "min": 18,
+    "max": 25,
+    "raw": "18–25",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--12",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение",
+    "unit": "ч",
+    "min": 12,
+    "max": 14,
+    "raw": "12–14 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--13",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "unit": "°C",
+    "min": 16,
+    "max": 22,
+    "raw": "16–22°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--14",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--15",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--16",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "unit": "%",
+    "min": 10,
+    "max": 15,
+    "raw": "10–15%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--17",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "min": 20,
+    "max": 28,
+    "raw": "20–28",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--18",
+    "docSlug": "crops--strawberry",
+    "metric": "Плоды",
+    "unit": "ч",
+    "min": 12,
+    "max": 14,
+    "raw": "12–14 ч",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--19",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "min": 1,
+    "max": 1.6,
+    "raw": "1.0–1.6",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--20",
+    "docSlug": "crops--strawberry",
+    "metric": "Вегетация",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--21",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение/плоды",
+    "min": 1.2,
+    "max": 2,
+    "raw": "1.2–2.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--strawberry--22",
+    "docSlug": "crops--strawberry",
+    "metric": "Цветение/плоды",
+    "min": 5.5,
+    "max": 6,
+    "raw": "5.5–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--1",
+    "docSlug": "crops--tomato",
+    "metric": "Типичный цикл",
+    "min": 90,
+    "max": 120,
+    "raw": "90–120 дней до урожая",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--2",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 23,
+    "max": 25,
+    "raw": "23–25°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--3",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "unit": "°C",
+    "min": 20,
+    "max": 22,
+    "raw": "20–22°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--4",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 65,
+    "max": 75,
+    "raw": "65–75%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--5",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "unit": "%",
+    "min": 60,
+    "max": 70,
+    "raw": "60–70%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--6",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "min": 12,
+    "max": 18,
+    "raw": "12–18",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--7",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 24,
+    "max": 26,
+    "raw": "24–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--8",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "unit": "°C",
+    "min": 18,
+    "max": 20,
+    "raw": "18–20°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--9",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 55,
+    "max": 65,
+    "raw": "55–65%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--10",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 50,
+    "max": 60,
+    "raw": "50–60%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--11",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "unit": "%",
+    "min": 5,
+    "max": 10,
+    "raw": "5–10%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--12",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "min": 20,
+    "max": 28,
+    "raw": "20–28",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--13",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "unit": "°C",
+    "min": 22,
+    "max": 24,
+    "raw": "22–24°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--14",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "unit": "°C",
+    "min": 16,
+    "max": 18,
+    "raw": "16–18°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--15",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--16",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--17",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "unit": "%",
+    "min": 8,
+    "max": 15,
+    "raw": "8–15%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--18",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение",
+    "min": 25,
+    "max": 32,
+    "raw": "25–32",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--19",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "unit": "°C",
+    "min": 22,
+    "max": 26,
+    "raw": "22–26°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--20",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "unit": "°C",
+    "min": 16,
+    "max": 18,
+    "raw": "16–18°C",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--21",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 45,
+    "max": 50,
+    "raw": "45–50%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--22",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 45,
+    "max": 55,
+    "raw": "45–55%",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--23",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "unit": "%",
+    "min": 10,
+    "max": 18,
+    "raw": "10–18%/сут",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--24",
+    "docSlug": "crops--tomato",
+    "metric": "Плодоношение",
+    "min": 25,
+    "max": 35,
+    "raw": "25–35",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--25",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "min": 1,
+    "max": 1.4,
+    "raw": "1.0–1.4",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--26",
+    "docSlug": "crops--tomato",
+    "metric": "Рассада",
+    "min": 5.8,
+    "max": 6.2,
+    "raw": "5.8–6.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--27",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "min": 1.8,
+    "max": 2.4,
+    "raw": "1.8–2.4",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--28",
+    "docSlug": "crops--tomato",
+    "metric": "Вегетация",
+    "min": 5.8,
+    "max": 6.2,
+    "raw": "5.8–6.2",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--29",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение/плоды",
+    "min": 2.2,
+    "max": 3,
+    "raw": "2.2–3.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  },
+  {
+    "id": "crops--tomato--30",
+    "docSlug": "crops--tomato",
+    "metric": "Цветение/плоды",
+    "min": 5.8,
+    "max": 6,
+    "raw": "5.8–6.0",
+    "trust": "PROJECT_DECISION",
+    "sourceIds": []
+  }
+]

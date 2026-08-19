@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-08-17T22:20:06.866Z",
+  "documentCount": 25,
+  "claimCount": 174,
+  "trustCounts": {
+    "VERIFIED": 11,
+    "PROJECT_DECISION": 14,
+    "UNVERIFIED": 0
+  },
+  "warnings": [],
+  "topics": [
+    "climate",
+    "co2",
+    "disease-basics",
+    "grow-stages",
+    "humidity-vpd",
+    "hydroponics",
+    "irrigation",
+    "lighting",
+    "nutrition",
+    "ph-ec",
+    "plant-physiology",
+    "plant-stress",
+    "sensors",
+    "substrate"
+  ]
+}
