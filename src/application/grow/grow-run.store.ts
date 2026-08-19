@@ -1,7 +1,15 @@
+import { appendGrowJournalEntry } from '../ai/grow-journal.store';
 import type { GrowRun, StartGrowRunInput } from '../../domain/grow/grow-run-telemetry.types';
 import type { GrowStageId } from '../../domain/grow/grow-stage.types';
+import { summarizeGrowRunTelemetry } from './grow-run-telemetry.store';
 
 const STORAGE_KEY = 'qbx_grow_runs_v1';
+
+function notifyGrowRunUpdated(): void {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('qbx-grow-run-updated'));
+  }
+}
 
 function key(spaceId: string): string {
   return `${STORAGE_KEY}_${spaceId}`;
@@ -20,6 +28,7 @@ export function loadGrowRuns(spaceId: string): GrowRun[] {
 function saveGrowRuns(spaceId: string, runs: GrowRun[]): void {
   if (!spaceId || typeof window === 'undefined') return;
   localStorage.setItem(key(spaceId), JSON.stringify(runs));
+  notifyGrowRunUpdated();
 }
 
 export function getActiveGrowRun(spaceId: string): GrowRun | null {
@@ -56,12 +65,22 @@ export function completeGrowRun(spaceId: string, runId: string, notes?: string):
   const runs = loadGrowRuns(spaceId);
   const idx = runs.findIndex((r) => r.id === runId);
   if (idx < 0) return null;
-  runs[idx] = {
+  const completed = {
     ...runs[idx],
-    status: 'completed',
+    status: 'completed' as const,
     endedAt: new Date().toISOString(),
     notes: notes ?? runs[idx].notes,
   };
+  runs[idx] = completed;
   saveGrowRuns(spaceId, runs);
-  return runs[idx];
+
+  const telemetry = summarizeGrowRunTelemetry(spaceId, runId);
+  appendGrowJournalEntry(spaceId, {
+    kind: 'note',
+    title: `GrowRun завершён: ${completed.commonName}`,
+    body: `Фаза: ${completed.stage}. Сэмплов телеметрии: ${telemetry.sampleCount}.`,
+    growRunId: runId,
+  });
+
+  return completed;
 }

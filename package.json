@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "qbx",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,7 +16,10 @@
     "kb:sync": "tsx scripts/sync-knowledge.ts",
     "lint:knowledge": "tsx scripts/lint-agent-knowledge.ts",
     "db:push": "bash scripts/db-push.sh",
-    "db:verify": "tsx scripts/verify-migrations.ts"
+    "db:verify": "tsx scripts/verify-migrations.ts",
+    "db:bundle": "tsx scripts/bundle-migrations.ts",
+    "verify:ops": "tsx scripts/verify-ops.ts",
+    "verify:stripe": "tsx scripts/verify-stripe-config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.6",
@@ -28,6 +31,7 @@
     "express": "^4.21.2",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
+    "mqtt": "^5.15.2",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "three": "^0.175.0",

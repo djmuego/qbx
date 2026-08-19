@@ -16,7 +16,18 @@ export function loadIntegrationsConfig(workspaceId: string): WorkspaceIntegratio
   try {
     const raw = localStorage.getItem(storageKey(workspaceId));
     if (!raw) return defaultIntegrationsConfig();
-    return { ...defaultIntegrationsConfig(), ...(JSON.parse(raw) as WorkspaceIntegrationsConfig) };
+    const defaults = defaultIntegrationsConfig();
+    const parsed = JSON.parse(raw) as WorkspaceIntegrationsConfig;
+    return {
+      ...defaults,
+      ...parsed,
+      mqtt: {
+        ...defaults.mqtt,
+        ...parsed.mqtt,
+        topicMappings: parsed.mqtt?.topicMappings ?? defaults.mqtt.topicMappings,
+      },
+      homeAssistant: { ...defaults.homeAssistant, ...parsed.homeAssistant },
+    };
   } catch {
     return defaultIntegrationsConfig();
   }

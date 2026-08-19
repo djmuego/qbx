@@ -331,6 +331,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [isGrowPhaseModalOpen, setIsGrowPhaseModalOpen] = useState(false);
+  const [growRunRevision, setGrowRunRevision] = useState(0);
   const [selectedSensor, setSelectedSensor] = useState<{ device: QBXDevice; sensor: PortInput } | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<{ device: QBXDevice; output: PortOutput } | null>(null);
   const [selectedDeviceDetail, setSelectedDeviceDetail] = useState<QBXDevice | null>(null);
@@ -519,12 +520,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return list;
   }, [currentSpaceDevices]);
 
+  const activeGrowRun = useMemo(
+    () => (currentSpaceId ? getActiveGrowRun(currentSpaceId) : null),
+    [currentSpaceId, growRunRevision],
+  );
+
+  useEffect(() => {
+    const onGrowRunUpdated = () => setGrowRunRevision((n) => n + 1);
+    window.addEventListener('qbx-grow-run-updated', onGrowRunUpdated);
+    return () => window.removeEventListener('qbx-grow-run-updated', onGrowRunUpdated);
+  }, []);
+
   const growContext = useMemo(
     () =>
       buildIntelligenceContext({
         space: currentSpace,
         growPhase,
         cropProfile,
+        growRun: activeGrowRun,
         devices,
         automations,
         isEmergencyActive,
@@ -533,7 +546,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         spaceMap: currentSpaceMap,
         plants: currentSpacePlants,
       }),
-    [currentSpace, growPhase, cropProfile, devices, automations, isEmergencyActive, currentSpaceId, runtimeService, currentSpaceMap, currentSpacePlants],
+    [currentSpace, growPhase, cropProfile, activeGrowRun, devices, automations, isEmergencyActive, currentSpaceId, runtimeService, currentSpaceMap, currentSpacePlants],
   );
 
   const agentLocalAnalysis = useMemo(() => createExpertAnalysis(growContext, cropProfile), [growContext, cropProfile]);

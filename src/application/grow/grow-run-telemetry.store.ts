@@ -53,6 +53,22 @@ export function summarizeGrowRunTelemetry(spaceId: string, growRunId: string): G
   };
 }
 
+export function exportGrowRunTelemetryJson(spaceId: string, growRunId: string): string {
+  const samples = loadGrowRunTelemetry(spaceId, growRunId);
+  return JSON.stringify(
+    {
+      schemaVersion: 1,
+      spaceId,
+      growRunId,
+      exportedAt: new Date().toISOString(),
+      sampleCount: samples.length,
+      samples,
+    },
+    null,
+    2,
+  );
+}
+
 export interface RuntimeTelemetrySlice {
   tempC: number | null;
   humidityPct: number | null;

@@ -163,6 +163,8 @@ export interface GrowContext {
     id?: string;
     commonName?: string;
     startedAt?: string;
+    stage?: string;
+    telemetrySampleCount?: number;
     dataKind: DataKind;
   };
   environment: {

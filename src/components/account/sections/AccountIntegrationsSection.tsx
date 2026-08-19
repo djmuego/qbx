@@ -10,10 +10,17 @@ import {
   saveIntegrationsConfig,
 } from '../../../application/integrations/hub-integration.store';
 import {
+  fetchHomeAssistantEntities,
+  fetchMqttBridgeMessages,
+  fetchMqttBridgeStatus,
+  startMqttTopicMonitor,
+  stopMqttTopicMonitor,
   testHomeAssistantConnection,
   testMqttBrokerConnection,
 } from '../../../application/integrations/integrations-connection.api';
+import type { MqttBridgeMessageResult } from '../../../application/integrations/integrations-connection.api';
 import type { WorkspaceIntegrationsConfig } from '../../../domain/integrations/hub-integration.types';
+import type { MqttTopicMapping } from '../../../domain/integrations/mqtt-topic-mapping.types';
 
 export const AccountIntegrationsSection: React.FC = () => {
   const { t } = useLocale();
@@ -25,11 +32,32 @@ export const AccountIntegrationsSection: React.FC = () => {
   const [mqttTestResult, setMqttTestResult] = useState<string | null>(null);
   const [haTestBusy, setHaTestBusy] = useState(false);
   const [haTestResult, setHaTestResult] = useState<string | null>(null);
+  const [haEntitiesBusy, setHaEntitiesBusy] = useState(false);
+  const [mqttMonitorBusy, setMqttMonitorBusy] = useState(false);
+  const [mqttMonitorActive, setMqttMonitorActive] = useState(false);
+  const [mqttMessages, setMqttMessages] = useState<MqttBridgeMessageResult[]>([]);
 
   useEffect(() => {
     if (!activeWorkspaceId) return;
     setConfig(loadIntegrationsConfig(activeWorkspaceId));
   }, [activeWorkspaceId]);
+
+  useEffect(() => {
+    if (!mqttMonitorActive) return;
+    const poll = async () => {
+      try {
+        const status = await fetchMqttBridgeStatus();
+        setMqttMonitorActive(status.active && status.connected);
+        const { messages } = await fetchMqttBridgeMessages(12);
+        setMqttMessages(messages);
+      } catch {
+        setMqttMonitorActive(false);
+      }
+    };
+    void poll();
+    const timer = window.setInterval(() => void poll(), 5000);
+    return () => window.clearInterval(timer);
+  }, [mqttMonitorActive]);
 
   const persist = (next: WorkspaceIntegrationsConfig) => {
     if (!activeWorkspaceId) return;
@@ -78,6 +106,68 @@ export const AccountIntegrationsSection: React.FC = () => {
     }
   };
 
+  const runMqttMonitor = async () => {
+    if (!config?.mqtt.brokerUrl.trim()) {
+      setMqttTestResult(t('integrations.mqttNoBroker', 'Укажите адрес брокера'));
+      return;
+    }
+    setMqttMonitorBusy(true);
+    setMqttTestResult(null);
+    try {
+      const result = await startMqttTopicMonitor({
+        brokerUrl: config.mqtt.brokerUrl,
+        port: config.mqtt.port,
+        topicPrefix: config.mqtt.topicPrefix,
+        useTls: config.mqtt.useTls,
+        topicMappings: config.mqtt.topicMappings,
+      });
+      if (result.ok && result.status) {
+        setMqttMonitorActive(true);
+        setMqttTestResult(
+          t('integrations.mqttMonitorOn', 'MQTT monitor активен') +
+            ` · ${result.status.topicFilter} (${result.status.brokerHost}:${result.status.port})`,
+        );
+      } else {
+        setMqttTestResult(result.error ?? t('integrations.mqttFail', 'Не удалось подключиться'));
+      }
+    } catch (e) {
+      setMqttTestResult(e instanceof Error ? e.message : t('integrations.mqttFail', 'Не удалось подключиться'));
+    } finally {
+      setMqttMonitorBusy(false);
+    }
+  };
+
+  const stopMqttMonitor = async () => {
+    await stopMqttTopicMonitor();
+    setMqttMonitorActive(false);
+    setMqttMessages([]);
+    setMqttTestResult(t('integrations.mqttMonitorOff', 'MQTT monitor остановлен'));
+  };
+
+  const updateMapping = (id: string, patch: Partial<MqttTopicMapping>) => {
+    const topicMappings = config.mqtt.topicMappings.map((m) => (m.id === id ? { ...m, ...patch } : m));
+    persist({ ...config, mqtt: { ...config.mqtt, topicMappings } });
+  };
+
+  const addMapping = () => {
+    const prefix = config.mqtt.topicPrefix.endsWith('/') ? config.mqtt.topicPrefix : `${config.mqtt.topicPrefix}/`;
+    const row: MqttTopicMapping = {
+      id: `map-${Date.now()}`,
+      topicPattern: `${prefix}+/temp`,
+      deviceId: '',
+      inputId: '',
+      unit: '°C',
+    };
+    persist({ ...config, mqtt: { ...config.mqtt, topicMappings: [...config.mqtt.topicMappings, row] } });
+  };
+
+  const removeMapping = (id: string) => {
+    persist({
+      ...config,
+      mqtt: { ...config.mqtt, topicMappings: config.mqtt.topicMappings.filter((m) => m.id !== id) },
+    });
+  };
+
   const runHaTest = async () => {
     if (!config.homeAssistant.baseUrl.trim()) {
       setHaTestResult(t('integrations.haNoUrl', 'Укажите URL Home Assistant'));
@@ -108,13 +198,61 @@ export const AccountIntegrationsSection: React.FC = () => {
     }
   };
 
+  const runHaEntityDiscovery = async () => {
+    if (!config.homeAssistant.baseUrl.trim()) {
+      setHaTestResult(t('integrations.haNoUrl', 'Укажите URL Home Assistant'));
+      return;
+    }
+    if (!config.homeAssistant.accessToken?.trim()) {
+      setHaTestResult(t('integrations.haNoToken', 'Укажите long-lived access token'));
+      return;
+    }
+    setHaEntitiesBusy(true);
+    setHaTestResult(null);
+    try {
+      const result = await fetchHomeAssistantEntities({
+        baseUrl: config.homeAssistant.baseUrl,
+        accessToken: config.homeAssistant.accessToken,
+      });
+      if (result.ok) {
+        const topDomains = Object.entries(result.domainCounts ?? {})
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 4)
+          .map(([domain, count]) => `${domain}:${count}`)
+          .join(', ');
+        const snapshot = {
+          entityCount: result.entityCount ?? 0,
+          domainCounts: result.domainCounts ?? {},
+          sampleEntities: result.sampleEntities ?? [],
+          discoveredAt: new Date().toISOString(),
+        };
+        persist({
+          ...config,
+          homeAssistant: { ...config.homeAssistant, lastDiscovery: snapshot },
+        });
+        setHaTestResult(
+          `${t('integrations.haEntitiesOk', 'Сущностей')}: ${result.entityCount ?? 0}` +
+            (topDomains ? ` · ${topDomains}` : '') +
+            (result.latencyMs ? ` (${result.latencyMs}ms)` : '') +
+            ` · ${t('integrations.haSaved', 'сохранено')}`,
+        );
+      } else {
+        setHaTestResult(result.error ?? t('integrations.haFail', 'Не удалось подключиться'));
+      }
+    } catch (e) {
+      setHaTestResult(e instanceof Error ? e.message : t('integrations.haFail', 'Не удалось подключиться'));
+    } finally {
+      setHaEntitiesBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <AccountCard
         title={t('integrations.title', 'Внешние хабы')}
         description={t(
           'integrations.hint',
-          'QBX Hub (фирменный Zigbee) — в разработке. Ниже — черновики подключений (без live-транспорта).',
+          'Внешние хабы: health-check, MQTT topic monitor (dev proxy) и HA entity discovery. Не инжектит fake telemetry в hardware mode.',
         )}
       >
         <p className="text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl px-3 py-2">
@@ -124,7 +262,7 @@ export const AccountIntegrationsSection: React.FC = () => {
         {!allowed && (
           <p className="text-xs text-violet-700 dark:text-violet-300 mt-2 flex items-center gap-1">
             <Lock className="w-3.5 h-3.5" />
-            {t('integrations.proRequired', 'Настройка внешних хабов — Pro. Коннекторы появятся в следующем релизе.')}
+            {t('integrations.proRequired', 'Настройка внешних хабов — Pro. Live runtime mapping — отдельный этап.')}
           </p>
         )}
 
@@ -204,18 +342,114 @@ export const AccountIntegrationsSection: React.FC = () => {
               />
               TLS
             </label>
-            <button
-              type="button"
-              disabled={!allowed || mqttTestBusy}
-              onClick={() => proGate(() => void runMqttTest())}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
-            >
-              <PlugZap className="w-3.5 h-3.5" />
-              {mqttTestBusy
-                ? t('integrations.testing', 'Проверка…')
-                : t('integrations.mqttTest', 'Проверить TCP')}
-            </button>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">
+                  {t('integrations.mqttMappings', 'Topic → device mapping')}
+                </p>
+                <button
+                  type="button"
+                  disabled={!allowed}
+                  onClick={() => proGate(addMapping)}
+                  className="text-[10px] font-semibold text-lime-700 dark:text-lime-300"
+                >
+                  + {t('integrations.mqttAddMapping', 'Добавить')}
+                </button>
+              </div>
+              {config.mqtt.topicMappings.length === 0 ? (
+                <p className="text-[10px] text-slate-400">{t('integrations.mqttMappingsEmpty', 'Нет правил')}</p>
+              ) : (
+                config.mqtt.topicMappings.map((mapping) => (
+                  <div key={mapping.id} className="grid grid-cols-2 gap-1.5 p-2 rounded-lg bg-slate-50 dark:bg-zinc-800/60">
+                    <input
+                      disabled={!allowed}
+                      value={mapping.topicPattern}
+                      onChange={(e) => updateMapping(mapping.id, { topicPattern: e.target.value })}
+                      placeholder="qbx/+/temp"
+                      className="col-span-2 px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <input
+                      disabled={!allowed}
+                      value={mapping.deviceId}
+                      onChange={(e) => updateMapping(mapping.id, { deviceId: e.target.value })}
+                      placeholder="deviceId"
+                      className="px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <input
+                      disabled={!allowed}
+                      value={mapping.inputId}
+                      onChange={(e) => updateMapping(mapping.id, { inputId: e.target.value })}
+                      placeholder="inputId"
+                      className="px-2 py-1 text-[10px] rounded border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                    />
+                    <button
+                      type="button"
+                      disabled={!allowed}
+                      onClick={() => proGate(() => removeMapping(mapping.id))}
+                      className="col-span-2 text-[10px] text-rose-600 text-left"
+                    >
+                      {t('common.delete', 'Удалить')}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={!allowed || mqttTestBusy}
+                onClick={() => proGate(() => void runMqttTest())}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+              >
+                <PlugZap className="w-3.5 h-3.5" />
+                {mqttTestBusy
+                  ? t('integrations.testing', 'Проверка…')
+                  : t('integrations.mqttTest', 'Проверить TCP')}
+              </button>
+              {!mqttMonitorActive ? (
+                <button
+                  type="button"
+                  disabled={!allowed || mqttMonitorBusy}
+                  onClick={() => proGate(() => void runMqttMonitor())}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-lime-100 dark:bg-lime-950/50 text-[11px] font-semibold text-lime-800 dark:text-lime-200 disabled:opacity-60"
+                >
+                  <Radio className="w-3.5 h-3.5" />
+                  {mqttMonitorBusy
+                    ? t('integrations.testing', 'Проверка…')
+                    : t('integrations.mqttSubscribe', 'Subscribe monitor')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled={!allowed}
+                  onClick={() => proGate(() => void stopMqttMonitor())}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-rose-200 text-[11px] font-semibold text-rose-600"
+                >
+                  {t('integrations.mqttUnsubscribe', 'Stop monitor')}
+                </button>
+              )}
+            </div>
             {mqttTestResult && <p className="text-[11px] text-slate-500">{mqttTestResult}</p>}
+            {mqttMessages.length > 0 && (
+              <ul className="text-[10px] text-slate-500 space-y-1 max-h-28 overflow-y-auto font-mono">
+                {mqttMessages
+                  .slice()
+                  .reverse()
+                  .map((m) => (
+                    <li key={`${m.receivedAtMs}-${m.topic}`}>
+                      {m.topic}: {m.payload.slice(0, 60)}
+                      {m.mapped && (
+                        <span className="text-lime-600 dark:text-lime-400">
+                          {' '}
+                          → {m.mapped.deviceId}/{m.mapped.inputId}=
+                          {m.mapped.value ?? '—'}
+                          {m.mapped.unit ?? ''}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </section>
 
           <section className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 space-y-2">
@@ -266,7 +500,26 @@ export const AccountIntegrationsSection: React.FC = () => {
               <PlugZap className="w-3.5 h-3.5" />
               {haTestBusy ? t('integrations.testing', 'Проверка…') : t('integrations.haTest', 'Проверить API')}
             </button>
+            <button
+              type="button"
+              disabled={!allowed || haEntitiesBusy}
+              onClick={() => proGate(() => void runHaEntityDiscovery())}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-semibold disabled:opacity-60"
+            >
+              <Home className="w-3.5 h-3.5" />
+              {haEntitiesBusy
+                ? t('integrations.testing', 'Проверка…')
+                : t('integrations.haEntities', 'Список сущностей')}
+            </button>
             {haTestResult && <p className="text-[11px] text-slate-500">{haTestResult}</p>}
+            {config.homeAssistant.lastDiscovery && (
+              <p className="text-[10px] text-slate-400">
+                {t('integrations.haLastDiscovery', 'Последний discovery')}:{' '}
+                {config.homeAssistant.lastDiscovery.entityCount}{' '}
+                {t('integrations.haEntitiesOk', 'Сущностей').toLowerCase()} ·{' '}
+                {new Date(config.homeAssistant.lastDiscovery.discoveredAt).toLocaleString()}
+              </p>
+            )}
           </section>
 
           <section className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 space-y-2">

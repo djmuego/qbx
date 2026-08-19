@@ -18,6 +18,7 @@ import { calculateDewPoint, calculateDliPlaceholder, calculateVpd } from './deri
 import { summarizeSensorHistory } from './telemetry-summary';
 import { toGeometrySnapshot } from '../../domain/map/space-map.geometry';
 import { spatialScaleForType } from '../../domain/map/spatial-hierarchy';
+import { summarizeGrowRunTelemetry } from '../grow/grow-run-telemetry.store';
 
 export interface BuildGrowContextInput {
   space: Space | undefined;
@@ -248,6 +249,10 @@ export function buildGrowContext(input: BuildGrowContextInput): GrowContext {
           id: input.growRun.id,
           commonName: input.growRun.commonName,
           startedAt: input.growRun.startedAt,
+          stage: GROW_STAGE_LABELS[input.growRun.stage] ?? input.growRun.stage,
+          telemetrySampleCount: input.space?.id
+            ? summarizeGrowRunTelemetry(input.space.id, input.growRun.id).sampleCount
+            : 0,
           dataKind: 'FACT',
         }
       : { dataKind: 'UNKNOWN' },

@@ -8,7 +8,7 @@ import { createBillingPortalSession } from '../../../data/adapters/supabase/bill
 import { EntitlementsService } from '../../../domain/commercial/entitlements';
 import { subscriptionToContext } from '../../../application/commercial/subscription-context';
 import { cloudHistoryRetentionLabel } from '../../../application/commercial/journal-retention';
-import { QBX_PRO_MONTHLY_USD } from '../../../config/commerce.config';
+import { QBX_PRO_MONTHLY_USD, isStripeConfigured } from '../../../config/commerce.config';
 
 export const AccountBillingSection: React.FC = () => {
   const { t } = useLocale();
@@ -52,6 +52,20 @@ export const AccountBillingSection: React.FC = () => {
         {!enforced && (
           <p className="text-[11px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl px-3 py-2 mb-3">
             {t('billing.commerceOff', 'Commerce выключен (sim / local / VITE_QBX_COMMERCE_MODE=off) — все Pro-фичи доступны.')}
+          </p>
+        )}
+
+        {enforced && (
+          <p
+            className={`text-[11px] rounded-xl px-3 py-2 mb-3 border ${
+              isStripeConfigured()
+                ? 'text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-800'
+                : 'text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800'
+            }`}
+          >
+            {isStripeConfigured()
+              ? t('billing.stripeReady', 'Stripe keys настроены — checkout и portal доступны.')
+              : t('billing.stripeMissing', 'Stripe не настроен — см. scripts/STRIPE_SETUP.md')}
           </p>
         )}
 

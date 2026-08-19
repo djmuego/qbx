@@ -97,3 +97,62 @@ export async function testHomeAssistantApi(
     clearTimeout(timer);
   }
 }
+
+export interface HomeAssistantEntitySummary {
+  ok: boolean;
+  entityCount?: number;
+  domainCounts?: Record<string, number>;
+  sampleEntities?: string[];
+  latencyMs?: number;
+  error?: string;
+}
+
+export async function fetchHomeAssistantEntitySummary(
+  baseUrl: string,
+  accessToken: string,
+  timeoutMs: number,
+): Promise<HomeAssistantEntitySummary> {
+  const base = normalizeBaseUrl(baseUrl);
+  if (!base) return { ok: false, error: 'baseUrl required' };
+  if (!accessToken.trim()) return { ok: false, error: 'accessToken required' };
+
+  const started = Date.now();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(`${base}/api/states`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+    });
+    const latencyMs = Date.now() - started;
+    if (!response.ok) {
+      return { ok: false, error: `HTTP ${response.status}`, latencyMs };
+    }
+
+    const states = (await response.json()) as Array<{ entity_id: string }>;
+    const domainCounts: Record<string, number> = {};
+    for (const state of states) {
+      const domain = state.entity_id.split('.')[0] ?? 'unknown';
+      domainCounts[domain] = (domainCounts[domain] ?? 0) + 1;
+    }
+
+    return {
+      ok: true,
+      entityCount: states.length,
+      domainCounts,
+      sampleEntities: states.slice(0, 8).map((s) => s.entity_id),
+      latencyMs,
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : 'Request failed',
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}

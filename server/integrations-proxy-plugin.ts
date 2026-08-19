@@ -3,14 +3,31 @@ import {
   parseBrokerHost,
   readBody,
   sendJson,
+  fetchHomeAssistantEntitySummary,
   testHomeAssistantApi,
   testTcpReachable,
 } from './integration-proxy-utils';
+import {
+  getMqttBridgeMessages,
+  getMqttBridgeStatus,
+  startMqttBridge,
+  stopMqttBridge,
+} from './mqtt-bridge';
 
 interface MqttTestBody {
   brokerUrl?: string;
   port?: number;
   timeoutMs?: number;
+  useTls?: boolean;
+  topicPrefix?: string;
+  topicMappings?: Array<{
+    id: string;
+    topicPattern: string;
+    deviceId: string;
+    inputId: string;
+    label?: string;
+    unit?: string;
+  }>;
 }
 
 interface HaTestBody {
@@ -46,7 +63,7 @@ export function integrationsProxyPlugin(): Plugin {
             host,
             port,
             latencyMs,
-            note: 'TCP reachability only — MQTT subscribe ships in next connector pass',
+            note: 'TCP reachability — use Subscribe for live topic monitor (dev proxy, not runtime injection)',
           });
         } catch (e) {
           sendJson(res, 200, {
@@ -54,6 +71,57 @@ export function integrationsProxyPlugin(): Plugin {
             error: e instanceof Error ? e.message : 'Connection failed',
           });
         }
+      });
+
+      server.middlewares.use('/api/integrations/mqtt/subscribe', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        try {
+          const raw = await readBody(req);
+          const body = JSON.parse(raw || '{}') as MqttTestBody;
+          const status = await startMqttBridge({
+            brokerUrl: body.brokerUrl ?? '',
+            port: Number(body.port) || 1883,
+            topicPrefix: body.topicPrefix ?? 'qbx/',
+            useTls: Boolean(body.useTls),
+            topicMappings: body.topicMappings ?? [],
+          });
+          sendJson(res, 200, { ok: true, status });
+        } catch (e) {
+          sendJson(res, 200, {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Subscribe failed',
+          });
+        }
+      });
+
+      server.middlewares.use('/api/integrations/mqtt/unsubscribe', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        stopMqttBridge();
+        sendJson(res, 200, { ok: true });
+      });
+
+      server.middlewares.use('/api/integrations/mqtt/status', async (req, res) => {
+        if (req.method !== 'GET') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        sendJson(res, 200, getMqttBridgeStatus());
+      });
+
+      server.middlewares.use('/api/integrations/mqtt/messages', async (req, res) => {
+        if (req.method !== 'GET') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        const url = new URL(req.url ?? '', 'http://localhost');
+        const limit = Number(url.searchParams.get('limit')) || 20;
+        sendJson(res, 200, { messages: getMqttBridgeMessages(limit) });
       });
 
       server.middlewares.use('/api/integrations/home-assistant/test', async (req, res) => {
@@ -79,6 +147,29 @@ export function integrationsProxyPlugin(): Plugin {
         }
       });
 
+      server.middlewares.use('/api/integrations/home-assistant/entities', async (req, res) => {
+        if (req.method !== 'POST') {
+          sendJson(res, 405, { error: 'Method not allowed' });
+          return;
+        }
+        try {
+          const raw = await readBody(req);
+          const body = JSON.parse(raw || '{}') as HaTestBody;
+          const timeoutMs = Math.min(Math.max(Number(body.timeoutMs) || 8000, 2000), 20000);
+          const result = await fetchHomeAssistantEntitySummary(
+            body.baseUrl ?? '',
+            body.accessToken ?? '',
+            timeoutMs,
+          );
+          sendJson(res, 200, result);
+        } catch (e) {
+          sendJson(res, 200, {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Request failed',
+          });
+        }
+      });
+
       server.middlewares.use('/api/integrations/tuya/status', async (req, res) => {
         if (req.method !== 'GET') {
           sendJson(res, 405, { error: 'Method not allowed' });
@@ -86,7 +177,9 @@ export function integrationsProxyPlugin(): Plugin {
         }
         sendJson(res, 200, {
           ok: false,
-          error: 'Tuya cloud connector not implemented — config draft only',
+          implemented: false,
+          status: 'draft',
+          error: 'Tuya cloud connector not implemented — save region in config only',
         });
       });
     },

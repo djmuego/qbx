@@ -25,7 +25,7 @@ function buildDigitalTwin(
   return {
     spaceId: base.space?.id ?? '',
     spaceName: base.space?.name ?? '',
-    growRun: null,
+    growRun: input.growRun ?? null,
     cropProfile: base.crop?.dataKind === 'FACT' ? { cropId: base.crop.cropId!, commonName: base.crop.commonName! } : null,
     environmentType: 'unknown',
     zoneCount: geometry?.zoneCount ?? 0,
@@ -39,7 +39,10 @@ function buildDigitalTwin(
   };
 }
 
-function buildGrowMemory(base: ReturnType<typeof buildCultivationContext>): GrowMemorySummary {
+function buildGrowMemory(
+  base: ReturnType<typeof buildCultivationContext>,
+  input: BuildCultivationContextInput,
+): GrowMemorySummary {
   const trustCounts: Record<string, number> = {};
   for (const e of AGENT_KNOWLEDGE_INDEX) {
     trustCounts[e.trust] = (trustCounts[e.trust] ?? 0) + 1;
@@ -49,7 +52,12 @@ function buildGrowMemory(base: ReturnType<typeof buildCultivationContext>): Grow
       topicsAvailable: [...new Set(AGENT_KNOWLEDGE_INDEX.flatMap((e) => e.topics))],
       trustCounts,
     },
-    growRun: { notableEvents: base.recentJournal.map((j) => j.title) },
+    growRun: input.growRun
+      ? {
+          growRunId: input.growRun.id,
+          notableEvents: base.recentJournal.map((j) => j.title),
+        }
+      : { notableEvents: base.recentJournal.map((j) => j.title) },
     facility: { spaceId: base.space?.id ?? '', equipmentObservations: [], lastEffectVerifications: [] },
   };
 }
@@ -73,7 +81,7 @@ export function buildIntelligenceContext(input: BuildCultivationContextInput): I
     sensorRecommendations: recommendSensors(base),
     escalation,
     dailyBriefing: buildDailyBriefing(base),
-    growMemory: buildGrowMemory(base),
+    growMemory: buildGrowMemory(base, input),
     recentEffectVerifications: [],
     spatial:
       input.space && input.spaceMap
